@@ -1,0 +1,321 @@
+﻿@using MangaOnline.ModelCore
+@using Newtonsoft.Json
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600%7CUbuntu:300,400,500,700" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-reboot.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-grid.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/owl.carousel.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/jquery.mCustomScrollbar.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/nouislider.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/ionicons.min.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/plyr.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/photoswipe.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/default-skin.css"/>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/main.css"/>
+    <link rel="stylesheet" href="~/css/_Layout.css"/>
+    <!-- Font-Awesome icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" 
+          integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="~/lib/icon/favicon-32x32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="~/lib/icon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/lib/icon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/lib/icon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/lib/icon/apple-touch-icon-144x144.png">
+
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="Dmitry Volkov">
+    <title>@ViewData["Title"] - MangaOnline</title>
+</head>
+<body class="body">
+@{
+    var accessToken = Context.Request.Cookies["USER_DATA"];
+    UserCookie user2 = new UserCookie();
+    var avatarLink = "/lib/img/avatar-default.jpg";
+    if (accessToken is not null)
+    {
+        user2 = JsonConvert.DeserializeObject<UserCookie>(accessToken);
+        if (user2.Avartar is not null)
+        {
+            avatarLink = "/image/avartar-user/" + user2.Avartar;
+        }
+    }
+    else
+    {
+        user2 = null;
+    }
+}
+<!-- header -->
+<header class="header">
+    <div class="header__wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="header__content">
+                        <!-- header logo -->
+                        <a asp-area="" asp-page="/Index" class="header__logo">
+                            <img src="~/lib/img/logo.svg" alt="">
+                        </a>
+                        <!-- end header logo -->
+
+                        <!-- header nav -->
+                        <ul class="header__nav">
+                            <!-- dropdown -->
+                            <li class="header__nav-item">
+                                <a asp-page="/index" class="header__nav-link">Trang chủ</a>
+                            </li>
+                            <!-- end dropdown -->
+
+                            <!-- dropdown -->
+                            <li class="header__nav-item">
+                                <a class="dropdown-toggle header__nav-link" href="#" role="button" id="dropdownMenuCatalog"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Thể Loại
+                                </a>
+                                <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuCatalog">
+                                    @await Component.InvokeAsync("Categories")
+                                </ul>
+                            </li>
+                            <!-- end dropdown -->
+                            <li class="header__nav-item">
+                                <a asp-page="/Public/FollowedList" class="header__nav-link">Theo Dõi</a>
+                            </li>
+                        </ul>
+                        <!-- end header nav -->
+
+                        <!-- header auth -->
+                        <div class="header__auth">
+                            <button class="header__search-btn" type="button">
+                                <i class="icon ion-ios-search"></i>
+                            </button>
+                            @{
+                                if (user2 is null)
+                                {
+                                    <a href="/Auth/AuthLogin" class="header__sign-in">
+                                        <i class="icon ion-ios-log-in"></i>
+                                        <span>Đăng nhập</span>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <li class="dropdown header__nav-item li-avatar">
+                                        <a class="dropdown-toggle header__nav-link header__nav-link--more" href="#" role="button" id="dropdownMenuMore" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <img class="avatar" src="@avatarLink"/>
+                                             @if (user2.Role=="VipUser")
+                                            {
+                                                <img style="height: 20px; margin-left: -30px; margin-top:-34px;" src="~/image/crown2.png"/>
+                                            }
+                                        </a>
+                                        <ul class="dropdown-menu header__dropdown-menu" aria-labelledby="dropdownMenuMore">
+                                            <li>
+                                                <a href="/profile">Hồ sơ</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Auth/ChangePassword">Đổi mật khẩu</a>
+                                            </li>
+                                            <li>
+                                                <a href="/history/@user2.Email">Lịch sử giao dịch</a>
+                                            </li>
+                                            @if (user2.Role=="NormalUser")
+                                            {
+                                                <li>
+                                                    <a href="/Auth/UpdateAccount">Nâng cấp tài khoản</a>
+                                                </li>
+                                            }
+                                            @if (user2.Role == "Admin")
+                                            {
+                                                <li>
+                                                    <a href="/manage/user/list">Quản lý người dùng</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/manage/listmanga">Quản lý Manga</a>
+                                                </li>
+                                            }
+                                            <li>
+                                                <a href="/Auth/AuthLogout">Đăng xuất</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                            }
+
+                        </div>
+                        <!-- end header auth -->
+
+                        <!-- header menu btn -->
+                        <button class="header__btn" type="button">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                        <!-- end header menu btn -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- header search -->
+    <form action="#" class="header__search">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="header__search-content">
+                        <input type="text" placeholder="Têm truyện bạn muốn đọc">
+
+                        <button type="button">Tìm Truyện</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- end header search -->
+</header>
+<!-- end header -->
+
+@RenderBody()
+
+<!-- footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <!-- footer list -->
+            <div class="col-12 col-md-3">
+                <h6 class="footer__title">Download Our App</h6>
+                <ul class="footer__app">
+                    <li>
+                        <a href="#">
+                            <img src="~/lib/img/Download_on_the_App_Store_Badge.svg" alt="">
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="~/lib/img/google-play-badge.png" alt="">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- end footer list -->
+
+            <!-- footer list -->
+            <div class="col-6 col-sm-4 col-md-3">
+                <h6 class="footer__title">Resources</h6>
+                <ul class="footer__list">
+                    <li>
+                        <a href="#">About Us</a>
+                    </li>
+                    <li>
+                        <a href="#">Pricing Plan</a>
+                    </li>
+                    <li>
+                        <a href="#">Help</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- end footer list -->
+
+            <!-- footer list -->
+            <div class="col-6 col-sm-4 col-md-3">
+                <h6 class="footer__title">Legal</h6>
+                <ul class="footer__list">
+                    <li>
+                        <a href="#">Terms of Use</a>
+                    </li>
+                    <li>
+                        <a href="#">Privacy Policy</a>
+                    </li>
+                    <li>
+                        <a href="#">Security</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- end footer list -->
+
+            <!-- footer list -->
+            <div class="col-12 col-sm-4 col-md-3">
+                <h6 class="footer__title">Contact</h6>
+                <ul class="footer__list">
+                    <li>
+                        <a href="tel:+18002345678">+1 (800) 234-5678</a>
+                    </li>
+                    <li>
+                        <a href="mailto:support@moviego.com">support@flixgo.com</a>
+                    </li>
+                </ul>
+                <ul class="footer__social">
+                    <li class="facebook">
+                        <a href="#">
+                            <i class="icon ion-logo-facebook"></i>
+                        </a>
+                    </li>
+                    <li class="instagram">
+                        <a href="#">
+                            <i class="icon ion-logo-instagram"></i>
+                        </a>
+                    </li>
+                    <li class="twitter">
+                        <a href="#">
+                            <i class="icon ion-logo-twitter"></i>
+                        </a>
+                    </li>
+                    <li class="vk">
+                        <a href="#">
+                            <i class="icon ion-logo-vk"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- end footer list -->
+
+            <!-- footer copyright -->
+            <div class="col-12">
+                <div class="footer__copyright">
+                    <small>
+                        <a target="_blank" href="https://www.templateshub.net">Templates Hub</a>
+                    </small>
+
+                    <ul>
+                        <li>
+                            <a href="#">Terms of Use</a>
+                        </li>
+                        <li>
+                            <a href="#">Privacy Policy</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- end footer copyright -->
+        </div>
+    </div>
+</footer>
+<!-- end footer -->
+
+<!-- JS -->
+<script src="~/lib/bootstrap/dist/js/jquery-3.3.1.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/owl.carousel.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.mousewheel.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.mCustomScrollbar.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/wNumb.js"></script>
+<script src="~/lib/bootstrap/dist/js/nouislider.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/plyr.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/jquery.morelines.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/photoswipe.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/photoswipe-ui-default.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/main.js"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

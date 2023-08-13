@@ -1,0 +1,11 @@
+﻿@model List<MangaOnline.Models.Category>
+
+<li>
+    <a asp-page="/Public/CategoriesList" asp-route-name="">Tất cả</a>
+</li>
+@foreach (var cate in Model)
+{
+    <li>
+        <a asp-page="/Public/CategoriesList" asp-route-cateName="@cate.Name">@cate.Name</a>
+    </li>
+}

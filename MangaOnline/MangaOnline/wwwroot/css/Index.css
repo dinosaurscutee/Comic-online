@@ -1,0 +1,12 @@
+﻿.img-top-month {
+    aspect-ratio: 0.67 !important;
+}
+
+.tag-image {
+    position: absolute;
+    padding: 0px 3px 0px 3px;
+    background-image: linear-gradient(90deg, #ff55a5 0%, #ff5860 100%);
+    box-shadow: 0 0 20px 0 rgb(255 88 96 / 50%);
+    border-radius: 4px;
+    color: white;
+}
