@@ -1,0 +1,24 @@
+﻿.alert-noti {
+    background-color: #D4EDDA;
+    position: absolute;
+    z-index: 99999;
+    transform: translate(186%, 37%);
+    padding: 15px;
+    border-radius: 10px;
+    width: 325px;
+}
+
+.icon-noti {
+    color: #96C83D;
+}
+
+.icon-btn {
+    position: absolute;
+    right: 18px;
+    font-size: 30px;
+    top: 3px;
+}
+
+.content-noti {
+    margin-left: 10px;
+}

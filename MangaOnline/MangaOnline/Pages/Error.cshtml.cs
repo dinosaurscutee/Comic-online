@@ -1,26 +1,23 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using MangaOnline.Enum;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace MangaOnline.Pages;
 
-[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-[IgnoreAntiforgeryToken]
 public class ErrorModel : PageModel
 {
-    public string? RequestId { get; set; }
+    public string MessageError { get; set; }
+    public ErrorTypeEnum errorType { get; set; }
 
-    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-
-    private readonly ILogger<ErrorModel> _logger;
-
-    public ErrorModel(ILogger<ErrorModel> logger)
+    public void OnGet(ErrorTypeEnum errorType)
     {
-        _logger = logger;
-    }
-
-    public void OnGet()
-    {
-        RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+        switch (errorType)
+        {
+            case ErrorTypeEnum.NoPage:
+                MessageError = "Trang bạn đang tìm kiếm không có sẵn!";
+                break;
+            case ErrorTypeEnum.NoPermission:
+                MessageError = "Role của bạn không phù hợp để truy cập trang này!";
+                break;
+        }
     }
 }

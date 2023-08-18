@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddRazorPages();
 
 builder.Services.AddSingleton<IJwtTokenHandler, JwtTokenHandler>();
-// builder.Services.AddSingleton<ILogicHandler, LogicHandler>();
+builder.Services.AddSingleton<ILogicHandler, LogicHandler>();
 builder.Services.AddSingleton<MangaOnlineV1DevPRN221Context>();
 builder.Services.AddSingleton<SecurityKey>(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["jwt:key"])));
 builder.Services.AddHttpContextAccessor();

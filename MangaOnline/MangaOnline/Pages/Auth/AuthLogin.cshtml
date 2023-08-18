@@ -1,0 +1,67 @@
+﻿@page "/Auth/AuthLogin"
+@model MangaOnline.Pages.Auth.AuthLogin
+
+@{
+    Layout = "_LayoutAuth";
+}
+<link rel="stylesheet" href="~/css/AuthRegistration.css">
+<link rel="stylesheet" href="~/css/Notification.css">
+@{
+    if (Model.NotificationLogin is not null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show alert-noti" id="alertNotification" role="alert">
+            <i class="icon ion-ios-checkmark-circle icon-noti"></i>
+            <span class="content-noti">@Model.NotificationLogin</span>
+            <button type="button" class="close icon-btn" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}
+
+<div class="sign section--bg" data-bg="~/lib/img/section/section.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="sign__content">
+                    <!-- authorization form -->
+                    <form method="post" class="sign__form">
+                        <a asp-page="/Index" class="sign__logo">
+                            <img src="~/lib/img/logo.svg" alt="">
+                        </a>
+
+                        <div class="sign__group">
+                            <input type="text" asp-for="UserLogin.Email" required class="sign__input" placeholder="Email">
+                            <p class="noti" id="noti-email">@Model.MessageEmail</p>
+                        </div>
+
+                        <div class="sign__group">
+                            <input type="password" asp-for="UserLogin.Password" id="newPasswordInput" required class="sign__input" placeholder="Password">
+                            <button type="button" id="btnNewPassword" onclick="showNewPassword()">
+                                <i class="icon ion-ios-eye icon-custom-password"></i>
+                            </button>
+                            <p class="noti" id="noti-email">@Model.MessagePassword</p>
+                        </div>
+
+                        <div class="sign__group sign__group--checkbox">
+                            <input id="remember" asp-for="UserLogin.RememberAccount" type="checkbox" checked>
+                            <label for="remember">Nhớ tài khoản</label>
+                        </div>
+
+                        <button class="sign__btn" type="submit">Đăng Nhập</button>
+
+                        <span class="sign__text">Chưa có tài khoản? <a href="AuthRegistration">Đăng Ký</a></span>
+
+                        <span class="sign__text">
+                            <a asp-page="ForgotPassword">Quên mật khẩu?</a>
+                        </span>
+                    </form>
+                    <!-- end authorization form -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Notification.js"></script>
+<script src="~/js/AuthLogin.js"></script>

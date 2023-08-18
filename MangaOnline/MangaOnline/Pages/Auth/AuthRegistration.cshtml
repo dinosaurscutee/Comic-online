@@ -1,0 +1,63 @@
+﻿@page "/Auth/AuthRegistration"
+@model MangaOnline.Pages.Auth.AuthRegistration
+
+@{
+    Layout = "_LayoutAuth";
+}
+<link rel="stylesheet" href="~/css/AuthRegistration.css">
+
+<div class="sign section--bg" data-bg="~/lib/img/section/section.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="sign__content">
+                    <!-- registration form -->
+                    <form method="post" class="sign__form">
+                        <a asp-page="/Index" class="sign__logo">
+                            <img src="~/lib/img/logo.svg" alt="">
+                        </a>
+
+                        <div class="sign__group">
+                            <input type="text" asp-for="RequestRegister.FullName" required maxlength="20" class="sign__input" placeholder="Tên người dùng">
+                        </div>
+
+                        <div class="sign__group">
+                            <input type="text" asp-for="RequestRegister.PhoneNumber" required maxlength="10" id="phoneNumber" class="sign__input" placeholder="Số điện thoại">
+                            <p class="noti" id="noti-phoneNumber"></p>
+                        </div>
+
+                        <div class="sign__group">
+                            <input type="text" asp-for="RequestRegister.Email" required id="email" class="sign__input" placeholder="Email">
+                            <p class="noti" id="noti-email">@Model.MessageEmail</p>
+                        </div>
+
+
+                        <div class="sign__group">
+                            <input type="password" asp-for="RequestRegister.Password" required id="password" class="sign__input" placeholder="Mật Khẩu">
+                            <button type="button" id="btnNewPassword" onclick="showNewPassword()">
+                                                            <i class="icon ion-ios-eye icon-custom-password"></i>
+                                                        </button>
+                            <p class="noti" id="noti-password"></p>
+                        </div>
+
+
+                        <div class="sign__group">
+                            <input type="password" required id="passwordConfirmed" class="sign__input" placeholder="Xác nhận mật Khẩu">
+                            <button type="button" id="btnPasswordConfirmed" onclick="showPasswordConfirmed()">
+                                <i class="icon ion-ios-eye icon-custom-password"></i>
+                            </button>
+                            <p class="noti" id="noti-passwordConfirmed"></p>
+                        </div>
+
+                        <button class="sign__btn" id="submitBtn" type="submit">Đăng ký</button>
+
+                        <span class="sign__text">Bạn đã có tài khoản? <a href="/Auth/AuthLogin">Đăng Nhập!</a></span>
+                    </form>
+                    <!-- registration form -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/AuthRegistration.js"></script>

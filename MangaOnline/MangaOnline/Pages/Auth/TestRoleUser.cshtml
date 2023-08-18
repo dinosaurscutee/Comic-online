@@ -1,0 +1,24 @@
+﻿@page "/test"
+@using MangaOnline.ModelCore
+@using Newtonsoft.Json
+@model MangaOnline.Pages.Auth.TestRoleUser
+
+@{
+    var accessToken = HttpContext.Request.Cookies["USER_DATA"];
+    var user = new UserCookie();
+    if (accessToken!=null)
+    {
+        user = JsonConvert.DeserializeObject<UserCookie>(accessToken);
+    }
+}
+
+@if (user == null || accessToken == null)
+{
+    <p>chua co USER_DATA</p>
+}
+else
+{
+    <p>@user.Role</p>   
+    <p>@accessToken</p>   
+    <p>Role</p>   
+}
