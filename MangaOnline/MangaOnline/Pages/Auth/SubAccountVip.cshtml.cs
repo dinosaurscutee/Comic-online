@@ -19,7 +19,7 @@ public class SubAccountVip : AbstractModel
     
     public IActionResult OnGet()
     {
-        if (!CheckRoleUser(new[] { UserRoleEnum.NormalUser.ToString(), UserRoleEnum.VipUser.ToString() }))
+        if (!CheckRoleUser(new[] { UserRoleEnum.NormalUser.ToString() }))
             return RedirectToPage("/Error");
         Ip = HttpContext.Connection.LocalIpAddress?.ToString()??"123";
         return Page();
@@ -27,7 +27,7 @@ public class SubAccountVip : AbstractModel
 
     public IActionResult OnPost()
     {
-        if (!CheckRoleUser(new[] { UserRoleEnum.NormalUser.ToString(), UserRoleEnum.VipUser.ToString() }))
+        if (!CheckRoleUser(new[] { UserRoleEnum.NormalUser.ToString() }))
             return RedirectToPage("/Error");
         try
         {
@@ -65,15 +65,14 @@ public class SubAccountVip : AbstractModel
             vnpay.AddRequestData("vnp_BankCode", "VNBANK");
             vnpay.AddRequestData("vnp_CreateDate", order.CreatedDate.ToString("yyyyMMddHHmmss"));
             vnpay.AddRequestData("vnp_CurrCode", "VND");
-            vnpay.AddRequestData("vnp_IpAddr", GetIpAddress()??"");
+            vnpay.AddRequestData("vnp_IpAddr", GetIpAddress()??"123456789");
             vnpay.AddRequestData("vnp_Locale", "vn");
             vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan don hang:" + order.OrderId);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
             vnpay.AddRequestData("vnp_TxnRef", order.OrderId.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
-
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-            // Response.Redirect(paymentUrl);
+            Response.Redirect(paymentUrl);
         }
         catch
         {

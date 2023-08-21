@@ -1,0 +1,68 @@
+﻿@page "/sub-account-vip/pay-result"
+@model MangaOnline.Pages.Auth.HistoryBanking
+
+@{
+}
+
+<link rel="stylesheet" href="~/css/Notification.css">
+@{
+    if (Model.StatusSub)
+    {
+        <div class="alert alert-warning alert-dismissible fade show alert-noti" id="alertNotification" role="alert">
+            <i class="icon ion-ios-checkmark-circle icon-noti"></i>
+            <span class="content-noti">Đăng ký thành công</span>
+            <button type="button" class="close icon-btn" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}
+<div>
+    <div class="container">
+        <div id="navbar" style=" min-height:25px">
+            <span id="text"></span>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding: 0px">
+                <div class="sign__content" style="padding: 0px; margin: 0px; min-height: 90vh">
+                    <div class="sign__form" style="min-width:600px;padding: 0px">
+                        <table class="table" style="color: white">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="margin-left:50px;">Date</th>
+                                <th scope="col" style="margin-left:50px;">Value</th>
+                                <th scope="col" style="margin-left:50px;">To</th>
+                                <th scope="col" style="margin-left:50px;"></th>
+                            </tr>
+                            color
+                            </thead>
+                            <tbody>
+                            @{
+                                foreach (var item in @Model.list)
+                                {
+                                    <tr>
+                                        <td scope="row"> @item.Date </td>
+                                        &emsp;
+                                        <td>@item.Value usd </td>
+                                        &emsp;
+                                        <td> Manga Online </td>
+                                        &emsp;
+                                        <td>
+                                            <a href="https://goerli.etherscan.io/tx/@item.Hash">View</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Notification.js"></script>
