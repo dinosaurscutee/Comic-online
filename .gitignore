@@ -3,7 +3,9 @@
 /MangaOnline/.vs
 /MangaOnline/MangaOnline/bin
 /MangaOnline/MangaOnline/obj
+MangaOnline/MangaOnline/appsettings.json
 /MangaOnline/Service.Schedule/bin
 /MangaOnline/Service.Schedule/obj
+/MangaOnline/Service.Schedule/appsettings.json
 
 
