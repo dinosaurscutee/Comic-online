@@ -1,0 +1,33 @@
+﻿@page
+@model MangaOnline.Pages.Auth.VerifyEmail
+
+@{
+    Layout = "_LayoutAuth";
+}
+<style>
+	.icon-custom {
+		font-size: 100px;
+		color: #ff5860;
+		background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
+		text-shadow: 0 12px 64px rgb(255 88 96 / 35%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+</style>
+<!-- page VerifyEmail -->
+<div class="page-404 section--bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="page-404__wrap">
+                    <div class="page-404__content">
+                        <i class="icon ion-ios-checkmark-circle icon-custom"></i>
+                        <p class="page-404__text">@Model.Message</p>
+                        <a asp-page="AuthLogin" class="page-404__btn">Đăng Nhập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end page VerifyEmail -->

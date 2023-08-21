@@ -1,26 +1,41 @@
 ﻿@page
+@using MangaOnline.Enum
 @model ErrorModel
 @{
     ViewData["Title"] = "Error";
+	Layout = "_LayoutAuth";
 }
-
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to the <strong>Development</strong> environment displays detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+<style>
+	.icon-custom {
+		font-size: 100px;
+		color: #ff5860;
+		background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
+		text-shadow: 0 12px 64px rgb(255 88 96 / 35%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+</style>
+<!-- page 404 -->
+	<div class="page-404 section--bg">
+		<div class="container">
+			<div class="row">
+				<div class="col-12">
+					<div class="page-404__wrap">
+						<div class="page-404__content">
+							@{
+								switch (Model.errorType)
+								{
+									case ErrorTypeEnum.NoPage:
+										<i class="icon ion-ios-close-circle icon-custom"></i>
+										break;
+								}
+							}
+							<p class="page-404__text">@Model.MessageError</p>
+							<a asp-page="Index" class="page-404__btn">Trang Chủ</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end page 404 -->

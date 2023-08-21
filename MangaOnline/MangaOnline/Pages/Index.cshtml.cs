@@ -46,7 +46,7 @@ public class IndexModel : PageModel
                 .Include(x=>x.CategoryMangas)
                 .ThenInclude(x=>x.Category)
                 .Include(x=>x.Chapteres)
-                .Where(x=>x.Status == (int)MangaStatus.Done)
+                .Where(x=>x.Status == (int)MangaStatusEnum.Done)
                 .OrderByDescending(x => x.ModifiedAt).Skip(0).Take(12).ToList();
             TopViewMangas = _context.Mangas
                 .Include(x=>x.CategoryMangas)

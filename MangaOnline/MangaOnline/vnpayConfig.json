@@ -1,0 +1,7 @@
+{
+  "vnp_Url" : "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
+  "vnp_Api" : "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction",
+  "vnp_TmnCode" : "3RXZE2T2",
+  "vnp_HashSecret" : "YIOYZTPHYQIRSGKVGXXWDTPJXHFXKLJC",
+  "vnp_Returnurl" : "http://localhost:5000/sub-account-vip/pay-result"
+}

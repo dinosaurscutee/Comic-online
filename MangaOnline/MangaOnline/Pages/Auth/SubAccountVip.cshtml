@@ -1,0 +1,99 @@
+﻿@page "/sub-account-vip/index"
+@using MangaOnline.ModelCore
+@using Newtonsoft.Json
+@using MangaOnline.Enum
+@using MangaOnline.Extensions
+@model MangaOnline.Pages.Auth.SubAccountVip
+
+@{
+    ViewData["Title"] = "Update Account";
+    Layout = "_LayoutAuth";
+}
+<link rel="stylesheet" href="~/css/AuthRegistration.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.0.6/ethers.umd.min.js" integrity="sha512-msnGRH7zMONtMZBH0kCPB4vKzJ3mU6RImgt9lnZ2G2bXotCjfaTaICllKzT0pwlusVsyCx/xqN2/xkanDyW4JQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+@{
+    var accessToken = HttpContext.Request.Cookies["USER_DATA"];
+    UserCookie user = new UserCookie();
+    if (accessToken is not null)
+    {
+        user = JsonConvert.DeserializeObject<UserCookie>(accessToken);
+    }
+    else
+    {
+        user = null;
+    }
+    var gmail = user.Email;
+
+}
+<div>
+    @* <input style="display:none" id="gmail" value="@gmail"/> *@
+    <div class="container">
+        <div id="navbar" style="color: #c9c9c9; min-height:25px">
+            <span id="text"></span>
+        </div>
+        <div class="row">
+            <div class="col-12" style="padding: 0px">
+                <div class="sign__content" style="padding: 0px; margin: 0px; min-height: 90vh">
+                    <form method="post" class="sign__form" styled="width:560px;padding: 0px">
+
+                        <div id="page1">
+                            <div style="color: white; margin-bottom: 10px; font-size: 20px; text-align:center">Đăng ký tài khoản Vip</div>
+                            <div style="color: #c9c9c9; margin-bottom: 5px;">Gói 1 tháng chỉ với 100.000 VND (sale 50%)</div>
+                            <div style="color: #c9c9c9; margin-bottom: 5px;">Gói 1 tuần chỉ với 50.000 VND</div>
+                            <div class="sign__group" id="box-bg" style="max-width: 300px">
+                                <img style="width: 300px ; height: auto" src="~/image/payment/payment-bg.png"/>
+                            </div>
+                            <div>
+                                <div class="filter__item" id="filter__quality">
+                                    <div class="filter__item-btn dropdown-toggle btn-dropdown-checkbox" style="padding-left: 20px;margin-top: 25px;" 
+                                         role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <input type="button" value="@Model.PackageAccount">
+                                        <input type="text" name="PackageAccount" value="" hidden/>
+                                        <span></span>
+                                    </div>
+                                    <ul class="filter__item-menu dropdown-menu scrollbar-dropdown"
+                                        aria-labelledby="filter-quality">
+                                        @foreach (PackageAccountVipEnum e in Enum.GetValues(typeof(PackageAccountVipEnum)))
+                                        {
+                                            <li>@LogicManga.GetEnumDescription(e)</li>
+                                        }
+                                    </ul>
+                                </div>
+                                <button type="submit" style="width:300px" class="sign__btn" id="btn-connect">
+                                    Đăng ký
+                                </button>
+                            </div>
+                            <p style="color: #fff">@GetIpAddress()</p>
+                            <p style="color: #fff">@Model.Ip</p>
+                        </div>
+                        @* *@
+                        @* <div class="sign__group" id="box-qr" style="display:none; flex-direction:column; align-items: center"> *@
+                        @*     <img src="~/image/payment/qrcode.png"/> *@
+                        @*     <div style="color: #fff; text-align:center; font-size:12px; margin-top: 3px; display: flex"> *@
+                        @*         <div style="cursor: pointer" onclick="handleCopy()">0xeaddd8a496a1ef9839e9a183437a9fa15fa5a249</div> *@
+                        @*     </div> *@
+                        @* </div> *@
+                        @* <div class="sign__group" id="box-hash" style="display:none"> *@
+                        @*     <input id="hash" required class="sign__input" placeholder="Input hash transaction"> *@
+                        @* </div> *@
+                        @* <button type="button" style="width:300px;display:none; margin-top: 0px" class="sign__btn" id="btn-check" onclick="handleCheck()"> *@
+                        @*     Check *@
+                        @* </button> *@
+                    </form>
+                </div>
+                @* <div id="box-des"  style="color: #c9c9c9;display: none; flex-direction:column; margin-bottom: 5px"> *@
+                @*                 <div>Thanh toán bằng crypto(10 usdc), scan qr code bên trên</div> *@
+                @*     <div>Sau khi gửi thành công hãy paste transaction hash vào ô bên trên để chúng tôi xác nhận giao dịch của bạn</div> *@
+                @* </div> *@
+            </div>
+        </div>
+    </div>
+</div>
+
+@{
+    string GetIpAddress()
+    {
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        return ipAddress ?? "Unknown";
+    }
+}
