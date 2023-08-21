@@ -1,0 +1,180 @@
+﻿@page "/manage/user/list"
+@using MangaOnline.Models
+@model UserList
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "UserList";
+}
+
+@{
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    routeUrl = routeUrl + "?role=" + Model.Role + "&status=" + Model.Status + "&index=";
+}
+
+<link rel="stylesheet" href="~/css/UserList.css">
+<link rel="stylesheet" href="~/css/MangaListManager.css">
+
+<div class="container border-list">
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="get">
+                @* filter *@
+                <div class="border-filter">
+                    <!-- filter item -->
+                    <div class="filter__item" id="filter__role">
+                        <span class="filter__item-label">Vai trò:</span>
+
+                        <div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-role" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="@Model.Role">
+                            <input asp-for="@Model.Role" type="hidden">
+                            <span></span>
+                        </div>
+
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-role">
+                            <li>Tất cả</li>
+                            <li>Admin</li>
+                            <li>Vip User</li>
+                            <li>Normal User</li>
+                        </ul>
+                    </div>
+
+                    <div class="filter__item" id="filter__status">
+                        <span class="filter__item-label">Trạng thái:</span>
+
+                        <div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-status" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="@Model.Status">
+                            <input asp-for="@Model.Status" type="hidden">
+                            <span></span>
+                        </div>
+
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-status">
+                            <li>Tất cả</li>
+                            <li>Khóa</li>
+                            <li>Bình thường</li>
+                        </ul>
+                    </div>
+
+                    <div class="label-apply">
+                        <div class="filter__item" style="margin-right: 20px;">
+                            <a href="/manage/user/list">
+                                <div class="btn-status-plink">
+                                    <i class="icon ion-ios-refresh-circle"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="filter__item">
+                            <button class="btn-status-plink" type="submit">
+                                Áp dụng
+                            </button>
+                        </div>
+                    </div>
+                    <!-- end filter item -->
+                </div>
+                @* filter *@
+            </form>
+            <div class="main-box clearfix">
+                <div class="table-responsive">
+                    <table class="table table-hover table-dark user-list">
+                        <thead>
+                            <tr>
+                                <th scope="col">Người dùng</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Số điện thoại</th>
+                                <th scope="col">Vai trò</th>
+                                <th scope="col" style="width: 88px;">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var user in Model.Users)
+                            {
+                                <tr>
+                                    <th>
+                                        @if (user.Avatar is null)
+                                        {
+                                            <img class="avatar" src="/lib/img/avatar-default.jpg" alt="">
+                                        }
+                                        else
+                                        {
+                                            <img class="avatar" src="/image/avartar-user/@user.Avatar" alt="">
+                                        }
+                                        @user.FullName <br />
+                                    </th>
+                                    <th>@user.Email</th>
+                                    <th>@user.PhoneNumber</th>
+                                    <th>
+                                        @user.UserRole!.Role.Name
+                                        @if (@user.UserRole!.Role.Name == "VipUser")
+                                        {
+                                            <p>
+                                                <span>hết hạn: </span>
+                                                @user.UserToken!.Expires.ToString("dd/MM/yyyy")
+                                            </p>
+                                        }
+                                    </th>
+                                    <th style="text-align: center;">
+                                        <form method="post" asp-page-handler="changeStatus">
+                                            <input name="userId" value="@user.Id" hidden />
+                                            <input name="userStatus" value="@user.Status" hidden />
+                                            @if (user.Status == 0)
+                                            {
+                                                <button class="btn-status-green" type="submit">
+                                                    <i class="fa-solid fa-lock-open"></i>
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn-status-red" type="submit">
+                                                    <i class="fa-sharp fa-solid fa-lock"></i>
+                                                </button>
+                                            }
+                                        </form>
+                                    </th>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- paginator -->
+                <div class="col-12">
+                    <ul class="paginator">
+                        @{
+                            var back = Model.PageIndex > 1 ? "" : "disabled";
+                            var next = Model.PageIndex != Model.LastPage ? "" : "disabled";
+                        }
+                        <li class="paginator__item paginator__item--prev @back">
+
+                            <a href="@routeUrl@(Model.PageIndex - 1)" class="">
+                                <i class="icon ion-ios-arrow-back"></i>
+                            </a>
+                        </li>
+                        @{
+                            if (Model.PageIndex > 1)
+                            {
+                                <li class="paginator__item ">
+                                    <a href="@routeUrl@(Model.PageIndex - 1)">@(Model.PageIndex - 1)</a>
+                                </li>
+                            }
+                            <li class="paginator__item paginator__item--active">
+                                <a>@Model.PageIndex</a>
+                            </li>
+                            if (Model.PageIndex != Model.LastPage)
+                            {
+                                <li class="paginator__item">
+                                    <a href="@routeUrl@(Model.PageIndex + 1)">@(Model.PageIndex + 1)</a>
+                                </li>
+                            }
+                        }
+                        <li class="paginator__item paginator__item--next @next">
+                            <a href="@routeUrl@(Model.PageIndex + 1)">
+                                <i class="icon ion-ios-arrow-forward"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- end paginator -->
+            </div>
+        </div>
+    </div>
+</div>
