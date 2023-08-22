@@ -44,10 +44,10 @@ public class AuthRegistration : PageModel
                 RequestRegister.Email,
                 "[MangaOnline] Xác thực email",
                 config["templateEmail:head"]
-                + "http://localhost:5000//Auth/VerifyEmail?id="
+                + "http://localhost:5000/Auth/VerifyEmail?id="
                 + userId
                 + config["templateEmail:last"]);
-            if (!await sendEmail)
+            if (sendEmail.Status == TaskStatus.Faulted)
             {
                 MessageEmail = "đã xảy ra lỗi! kiểm tra lại email";
                 return Page();

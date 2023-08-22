@@ -23,8 +23,9 @@ public class VerifyEmail : PageModel
         {
             return RedirectToPage("/Error",new {type=ErrorTypeEnum.NoPage});
         }
-
+        User.EmailConfirmed = true;
         Message = "Xác nhận email thành công";
+        _context.SaveChanges();
         return Page();
     }
 }

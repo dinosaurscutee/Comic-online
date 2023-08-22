@@ -53,12 +53,22 @@ public class AuthLogin : PageModel
             MessageEmail = "email sai";
             return Page();
         }
-        else if (!BCrypt.Net.BCrypt.Verify(UserLogin.Password, user.Password))
+        if (!BCrypt.Net.BCrypt.Verify(UserLogin.Password, user.Password))
         {
             MessagePassword = "password sai";
             return Page();
+        } 
+        if (user.EmailConfirmed == false)
+        {
+            MessageEmail = "Tài khoản chưa xác nhận email";
+            return Page();
         }
-        else
+        if (user.IsActive == false)
+        {
+            MessageEmail = "Tài khoản đã bị khóa";
+            return Page();
+        }
+        else 
         {
             var token = AuthenticationPage.WriteToken(user.FullName, user.Email, user.UserRole!.Role.Name!);
             var userCookie = new UserCookie()

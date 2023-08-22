@@ -25,42 +25,35 @@ public class HistoryBanking : AbstractModel
     {
         if (!CheckRoleUser(new[] { UserRoleEnum.NormalUser.ToString(), UserRoleEnum.VipUser.ToString() }))
             return RedirectToPage("/Error");
-        
+
         StatusSub = statusSub;
         var accessToken = HttpContext.Request.Cookies["USER_DATA"];
         var user = JsonConvert.DeserializeObject<UserCookie>(accessToken!)!;
         var userRole = _context.UserRoles.Include(x => x.User)
             .ThenInclude(x => x.UserToken).FirstOrDefault(x => x.UserId == user.Id);
         var role = _context.Roles.FirstOrDefault(x => x.Name!.Equals(UserRoleEnum.VipUser.ToString()));
-
-        if (vnp_TxnRef != null && 
+        var statusPackage = _context.Histories.FirstOrDefault(x =>
+            x.Value == vnp_TxnRef && x.Hash == ((int)PackageAccountVipEnum.NonePackage).ToString());
+        if (vnp_TxnRef != null &&
             vnp_Amount != null &&
-            _context.Histories.FirstOrDefault(x => x.Value == vnp_TxnRef) == null)
+            statusPackage != null)
         {
             userRole!.RoleId = role!.Id;
-            var tran = new History
-            {
-                Id = Guid.NewGuid(),
-                User = user.Id.ToString(),
-                From = DateTime.Now.ToString("dd/MM/yyyy"), // bđ gói
-                To = userRole.User.UserToken!.Expires.ToString("dd/MM/yyyy"), // bđ gói
-                Value = vnp_TxnRef,
-                Date = DateTime.Now // ngày tạo
-            };
+            statusPackage.From = DateTime.Now.ToString("dd/MM/yyyy"); // bđ gói
+            statusPackage.Date = DateTime.Now; // ngày tạo
 
             switch (vnp_Amount)
             {
-                case 100000:
-                    tran.Hash = ((int)PackageAccountVipEnum.OneMonth).ToString();
+                case 10000000:
+                    statusPackage.Hash = ((int)PackageAccountVipEnum.OneMonth).ToString();
                     userRole.User.UserToken!.Expires = DateTime.Now.AddDays(30);
                     break;
-                case 50000:
-                    tran.Hash = ((int)PackageAccountVipEnum.OneWeek).ToString();
+                case 5000000:
+                    statusPackage.Hash = ((int)PackageAccountVipEnum.OneWeek).ToString();
                     userRole.User.UserToken!.Expires = DateTime.Now.AddDays(7);
                     break;
             }
-
-            _context.Histories.Add(tran);
+            statusPackage.To = userRole.User.UserToken!.Expires.ToString("dd/MM/yyyy"); // bđ gói
             _context.SaveChangesAsync();
             var token = AuthenticationPage.WriteToken(user.FullName, user.Email, userRole.Role.Name!);
             var userCookie = new UserCookie()
@@ -80,10 +73,9 @@ public class HistoryBanking : AbstractModel
         }
         else
         {
-            list = _context.Histories.Where(r => r.User == user.Id.ToString()).ToList();
+            list = _context.Histories.Where(r =>
+                r.User == user.Id.ToString() && r.Hash != ((int)PackageAccountVipEnum.NonePackage).ToString()).ToList();
             return Page();
         }
-
-        return Page();
     }
 }

@@ -7,7 +7,7 @@
 
 @{
     ViewData["Title"] = "Update Account";
-    Layout = "_LayoutAuth";
+    // Layout = "Shared/_LayoutAuth";
 }
 <link rel="stylesheet" href="~/css/AuthRegistration.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.0.6/ethers.umd.min.js" integrity="sha512-msnGRH7zMONtMZBH0kCPB4vKzJ3mU6RImgt9lnZ2G2bXotCjfaTaICllKzT0pwlusVsyCx/xqN2/xkanDyW4JQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -22,7 +22,6 @@
     {
         user = null;
     }
-    var gmail = user.Email;
 
 }
 <div>
@@ -48,14 +47,17 @@
                                     <div class="filter__item-btn dropdown-toggle btn-dropdown-checkbox" style="padding-left: 20px;margin-top: 25px;" 
                                          role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <input type="button" value="@Model.PackageAccount">
-                                        <input type="text" name="PackageAccount" value="" hidden/>
+                                        <input type="text" name="PackageAccount" value="@Model.PackageAccount" hidden/>
                                         <span></span>
                                     </div>
                                     <ul class="filter__item-menu dropdown-menu scrollbar-dropdown"
                                         aria-labelledby="filter-quality">
                                         @foreach (PackageAccountVipEnum e in Enum.GetValues(typeof(PackageAccountVipEnum)))
                                         {
-                                            <li>@LogicManga.GetEnumDescription(e)</li>
+                                            if (e!= PackageAccountVipEnum.NonePackage)
+                                            {
+                                                <li>@LogicManga.GetEnumDescription(e)</li>   
+                                            }
                                         }
                                     </ul>
                                 </div>

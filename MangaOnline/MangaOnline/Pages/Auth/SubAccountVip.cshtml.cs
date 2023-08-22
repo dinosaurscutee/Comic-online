@@ -1,20 +1,25 @@
 ﻿using MangaOnline.Enum;
 using MangaOnline.Extensions;
+using MangaOnline.ModelCore;
 using MangaOnline.ModelCore.ModelVnPay;
+using MangaOnline.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 
 namespace MangaOnline.Pages.Auth;
 
 public class SubAccountVip : AbstractModel
 {
+    private readonly MangaOnlineV1DevPRN221Context _context;
     [BindProperty] public string PackageAccount { get; set; } = LogicManga.GetEnumDescription(PackageAccountVipEnum.OneWeek);
     private readonly IHttpContextAccessor _httpContextAccessor;
     [BindProperty] public string Ip { get; set; } = "sad";
 
-    public SubAccountVip(IHttpContextAccessor httpContextAccessor)
+    public SubAccountVip(IHttpContextAccessor httpContextAccessor, MangaOnlineV1DevPRN221Context context)
     {
         _httpContextAccessor = httpContextAccessor;
+        _context = context;
     }
     
     public IActionResult OnGet()
@@ -31,8 +36,10 @@ public class SubAccountVip : AbstractModel
             return RedirectToPage("/Error");
         try
         {
+            var accessToken = HttpContext.Request.Cookies["USER_DATA"];
+            var user = JsonConvert.DeserializeObject<UserCookie>(accessToken!)!;
+            
             var config = new ConfigurationBuilder().AddJsonFile("vnpayConfig.json").Build();
-
             var vnp_Returnurl = config["vnp_Returnurl"]; //URL nhan ket qua tra ve 
             var vnp_Url = config["vnp_Url"];//URL thanh toan cua VNPAY 
             var vnp_TmnCode = config["vnp_TmnCode"]; //Ma định danh merchant kết nối (Terminal Id)
@@ -72,13 +79,32 @@ public class SubAccountVip : AbstractModel
             vnpay.AddRequestData("vnp_ReturnUrl", vnp_Returnurl);
             vnpay.AddRequestData("vnp_TxnRef", order.OrderId.ToString()); // Mã tham chiếu của giao dịch tại hệ thống của merchant. Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY. Không được trùng lặp trong ngày
             var paymentUrl = vnpay.CreateRequestUrl(vnp_Url, vnp_HashSecret);
-            Response.Redirect(paymentUrl);
+            
+            var tran = new History()
+            {
+                Id = Guid.NewGuid(),
+                User = user.Id.ToString().ToUpper(),
+                From = DateTime.Now.ToString("dd/MM/yyyy"), // bđ gói
+                To = DateTime.Now.ToString("dd/MM/yyyy"), // bđ gói
+                Value = order.OrderId.ToString(),
+                Date = DateTime.Now, // ngày tạo,
+                Hash = ((int)PackageAccountVipEnum.NonePackage).ToString()
+            };
+
+            var listHistoriesOld =
+                _context.Histories.Where(x => x.Hash == ((int)PackageAccountVipEnum.NonePackage).ToString() && x.User == tran.User);
+            if (listHistoriesOld.Any())
+            {
+                _context.RemoveRange(listHistoriesOld);
+            }
+            _context.Histories.Add(tran);
+            _context.SaveChangesAsync();
+            return Redirect(paymentUrl);
         }
         catch
         {
             return RedirectToPage("/Error");
         }
-        return Page();
     }
     
     public string? GetIpAddress()
