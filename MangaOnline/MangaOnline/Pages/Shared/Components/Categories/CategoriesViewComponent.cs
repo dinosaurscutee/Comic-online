@@ -14,7 +14,7 @@ public class CategoriesViewComponent: ViewComponent
 
     public IViewComponentResult Invoke()
     {
-        List<Category> categories = _context.Categories.OrderBy(x => x.SubId).ToList();
+        var categories = _context.Categories.OrderBy(x => x.SubId).ToList();
         return View(categories);
     }
 }

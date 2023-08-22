@@ -1,6 +1,7 @@
 using System.Text;
 using MangaOnline.Extensions;
 using MangaOnline.Models;
+using MangaOnline.Pages.Hubs;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,9 @@ builder.Services.AddSingleton<MangaOnlineV1DevPRN221Context>();
 builder.Services.AddSingleton<SecurityKey>(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["jwt:key"])));
 builder.Services.AddHttpContextAccessor();
 
+// Add services to the container.
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -35,5 +39,7 @@ app.UseAuthorization();
 app.UseAuthentication();
 
 app.MapRazorPages();
+
+app.MapHub<NotificationHub>("/hubs/notification");
 
 app.Run();

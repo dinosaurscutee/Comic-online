@@ -7,7 +7,7 @@
 
 @{
     ViewData["Title"] = "Update Account";
-    Layout = "_LayoutAuth";
+    // Layout = "Shared/_LayoutAuth";
 }
 <link rel="stylesheet" href="~/css/AuthRegistration.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.0.6/ethers.umd.min.js" integrity="sha512-msnGRH7zMONtMZBH0kCPB4vKzJ3mU6RImgt9lnZ2G2bXotCjfaTaICllKzT0pwlusVsyCx/xqN2/xkanDyW4JQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -22,7 +22,6 @@
     {
         user = null;
     }
-    var gmail = user.Email;
 
 }
 <div>
@@ -43,48 +42,32 @@
                             <div class="sign__group" id="box-bg" style="max-width: 300px">
                                 <img style="width: 300px ; height: auto" src="~/image/payment/payment-bg.png"/>
                             </div>
-                            <div>
+                            <div style="display: flex">
                                 <div class="filter__item" id="filter__quality">
                                     <div class="filter__item-btn dropdown-toggle btn-dropdown-checkbox" style="padding-left: 20px;margin-top: 25px;" 
                                          role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <input type="button" value="@Model.PackageAccount">
-                                        <input type="text" name="PackageAccount" value="" hidden/>
+                                        <input type="text" name="PackageAccount" value="@Model.PackageAccount" hidden/>
                                         <span></span>
                                     </div>
                                     <ul class="filter__item-menu dropdown-menu scrollbar-dropdown"
                                         aria-labelledby="filter-quality">
                                         @foreach (PackageAccountVipEnum e in Enum.GetValues(typeof(PackageAccountVipEnum)))
                                         {
-                                            <li>@LogicManga.GetEnumDescription(e)</li>
+                                            if (e!= PackageAccountVipEnum.NonePackage)
+                                            {
+                                                <li>@LogicManga.GetEnumDescription(e)</li>   
+                                            }
                                         }
                                     </ul>
                                 </div>
-                                <button type="submit" style="width:300px" class="sign__btn" id="btn-connect">
+                                <button type="submit" style="width:50%" class="sign__btn" id="btn-connect">
                                     Đăng ký
                                 </button>
                             </div>
-                            <p style="color: #fff">@GetIpAddress()</p>
-                            <p style="color: #fff">@Model.Ip</p>
                         </div>
-                        @* *@
-                        @* <div class="sign__group" id="box-qr" style="display:none; flex-direction:column; align-items: center"> *@
-                        @*     <img src="~/image/payment/qrcode.png"/> *@
-                        @*     <div style="color: #fff; text-align:center; font-size:12px; margin-top: 3px; display: flex"> *@
-                        @*         <div style="cursor: pointer" onclick="handleCopy()">0xeaddd8a496a1ef9839e9a183437a9fa15fa5a249</div> *@
-                        @*     </div> *@
-                        @* </div> *@
-                        @* <div class="sign__group" id="box-hash" style="display:none"> *@
-                        @*     <input id="hash" required class="sign__input" placeholder="Input hash transaction"> *@
-                        @* </div> *@
-                        @* <button type="button" style="width:300px;display:none; margin-top: 0px" class="sign__btn" id="btn-check" onclick="handleCheck()"> *@
-                        @*     Check *@
-                        @* </button> *@
                     </form>
                 </div>
-                @* <div id="box-des"  style="color: #c9c9c9;display: none; flex-direction:column; margin-bottom: 5px"> *@
-                @*                 <div>Thanh toán bằng crypto(10 usdc), scan qr code bên trên</div> *@
-                @*     <div>Sau khi gửi thành công hãy paste transaction hash vào ô bên trên để chúng tôi xác nhận giao dịch của bạn</div> *@
-                @* </div> *@
             </div>
         </div>
     </div>
