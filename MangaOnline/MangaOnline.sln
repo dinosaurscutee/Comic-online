@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MangaOnline", "MangaOnline\MangaOnline.csproj", "{0CC0E7D1-1C41-4A1E-A571-2D0AD69D1980}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MangaOnline", "MangaOnline\MangaOnline.csproj", "{0CC0E7D1-1C41-4A1E-A571-2D0AD69D1980}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Schedule", "Service.Schedule\Service.Schedule.csproj", "{74C5C893-F483-4316-BB61-B89EA4AA5D4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service.Schedule", "Service.Schedule\Service.Schedule.csproj", "{74C5C893-F483-4316-BB61-B89EA4AA5D4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +21,8 @@ Global
 		{74C5C893-F483-4316-BB61-B89EA4AA5D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74C5C893-F483-4316-BB61-B89EA4AA5D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74C5C893-F483-4316-BB61-B89EA4AA5D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

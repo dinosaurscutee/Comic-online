@@ -79,7 +79,6 @@
 
     <ItemGroup>
       <Folder Include="Pages\Manage\" />
-      <Folder Include="Pages\Public\" />
     </ItemGroup>
 
 </Project>
