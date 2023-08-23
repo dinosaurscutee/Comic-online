@@ -1,281 +1,310 @@
-﻿@page 
+﻿@page
 @using MangaOnline.ModelCore
 @using Newtonsoft.Json
+@using MangaOnline.Enum
 @model MangaOnline.Pages.Public.DetailMangaModel
 
 @{
-	Layout = "_Layout";
-	ViewData["title"] = @Model.manga.Name;
+    Layout = "_Layout";
+    ViewData["title"] = @Model.manga.Name;
 }
 
 @{
-	var accessToken = HttpContext.Request.Cookies["USER_DATA"];
-	UserCookie user2 = new UserCookie();
-	var avatarLink = "/lib//lib/img/avatar-default.jpg";
-	if (accessToken is not null)
-	{
-		user2 = JsonConvert.DeserializeObject<UserCookie>(accessToken);
-		if (user2.Avartar is not null)
-		{
-			avatarLink = "/image/avartar-user/" + user2.Avartar;
-		}
-	}
-	else
-	{
-		user2 = null;
-	}
+    var accessToken = HttpContext.Request.Cookies["USER_DATA"];
+    UserCookie? user2;
+    var avatarLink = "/lib/img/avatar-default.jpg";
+    if (accessToken != null)
+    {
+        user2 = JsonConvert.DeserializeObject<UserCookie>(accessToken);
+        if (user2 is {Avartar: not null })
+        {
+            avatarLink = "/image/avartar-user/" + user2.Avartar;
+        }
+    }
+    else
+    {
+        user2 = null;
+    }
 }
 
 <link rel="stylesheet" href="~/css/DetailManga.css">
 
 <!-- details -->
 <section class="section details">
-	<!-- details background -->
-	<div class="details__bg" data-bg="//lib//lib/img/home/home__bg.jpg"></div>
-	<!-- end details background -->
-	<!-- details content -->
-	<div class="container">
-		<div class="row">
-			<!-- title -->
-			<div class="col-12">
-				<h1 class="details__title">@Model.manga.Name</h1>
-			</div>
-			<!-- end title -->
-			<!-- content -->
-			<div class="col-10">
-				<div class="card card--details card--series">
-					<div class="row">
-						<!-- card cover -->
-						<div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3">
-							<div class="card__cover">
-								<img src="/image/manga-image/@Model.manga.Image" alt="@Model.manga.Name" />
-							</div>
-						</div>
-						<!-- end card cover -->
-						<!-- card content -->
-						<div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9">
-							<div class="card__content">
-								<div class="card__wrap">
-									<span class="card__rate"><i class="icon ion-ios-star"></i>@Model.manga.Star</span>
-								</div>
+    <!-- details background -->
+    <div class="details__bg" data-bg="//lib//lib/img/home/home__bg.jpg"></div>
+    <!-- end details background -->
+    <!-- details content -->
+    <div class="container">
+        <div class="row">
+            <!-- title -->
+            <div class="col-12">
+                <h1 class="details__title">@Model.manga.Name</h1>
+            </div>
+            <!-- end title -->
+            <!-- content -->
+            <div class="col-10">
+                <div class="card card--details card--series">
+                    <div class="row">
+                        <!-- card cover -->
+                        <div class="col-12 col-sm-4 col-md-4 col-lg-3 col-xl-3">
+                            <div class="card__cover">
+                                <img src="/image/manga-image/@Model.manga.Image" alt="@Model.manga.Name"/>
+                            </div>
+                        </div>
+                        <!-- end card cover -->
+                        <!-- card content -->
+                        <div class="col-12 col-sm-8 col-md-8 col-lg-9 col-xl-9">
+                            <div class="card__content">
+                                <div class="card__wrap">
+                                    <span class="card__rate">
+                                        <i class="icon ion-ios-star"></i>@Model.manga.Star
+                                    </span>
+                                </div>
 
-								<ul class="card__meta">
-									<li><span><i class="fa fa-user"></i> Tác giả: </span>@Model.manga.Author.Name</li>
-									<li>
-										<span><i class="fa fa-rss"></i> Tình trạng: </span>
-										@{
-											var statusString = Model.manga.Status switch
-											{
-												0 => "Hoàn thành",
-												1 => "Đang cập nhật",
-												2 => "Dừng cập nhật",
-												_ => ""
-											};
-										}
-										@statusString
-									</li>
-									<li>
-										<span><i class="fa fa-tags"></i> Thể loại:</span>
-										@{
-											var categories = Model.mangaCategoryDict[Model.manga.Id];
-											foreach (var category in categories)
-											{
-												<a asp-page="/Public/CategoriesList" asp-route-cateName="@category.Name">@category.Name</a>
-											}
-										}
-									</li>
-									<li><span><i class="fa fa-eye"></i> Lượt xem: </span>@Model.manga.ViewCount</li>
-								</ul>
+                                <ul class="card__meta">
+                                    <li>
+                                        <span><i class="fa fa-user"></i> Tác giả: </span>@Model.manga.Author.Name
+                                    </li>
+                                    <li>
+                                        <span><i class="fa fa-rss"></i> Tình trạng: </span>
+                                        @{
+                                            var statusString = Model.manga.Status switch
+                                            {
+                                                0 => "Hoàn thành",
+                                                1 => "Đang cập nhật",
+                                                2 => "Dừng cập nhật",
+                                                _ => ""
+                                                };
+                                        }
+                                        @statusString
+                                    </li>
+                                    <li>
+                                        <span><i class="fa fa-tags"></i> Thể loại:</span>
+                                        @{
+                                            var categories = Model.mangaCategoryDict[Model.manga.Id];
+                                            foreach (var category in categories)
+                                            {
+                                                <a asp-page="/Public/CategoriesList" asp-route-cateName="@category.Name">@category.Name</a>
+                                            }
+                                        }
+                                    </li>
+                                    <li>
+                                        <span><i class="fa fa-eye"></i> Lượt xem: </span>@Model.manga.ViewCount
+                                    </li>
+                                </ul>
 
-								<div class="card__description card__description--details">
-									@Model.manga.Description
-								</div>
-							</div>
-						</div>
-						<!-- end card content -->
-					</div>
-					<div>
-						<ul class="ratings" style="{margin-top: 5px}">
-							<li class="star" id="star-5" onclick="handleRate(5)"></li>
-							<li class="star" id="star-4" onclick="handleRate(4)"></li>
-							<li class="star" id="star-3" onclick="handleRate(3)"></li>
-							<li class="star" id="star-2" onclick="handleRate(2)"></li>
-							<li class="star" id="star-1" onclick="handleRate(1)"></li>
-						</ul>
-					</div>
-					<div class="follow">
-						@if (user2 != null)
-						{
-							if (!Model.isFollowed)
-							{
-								<form method="post" asp-page-handler="follow">
-									<input name="mangaId" value="@Model.manga.Id" hidden />
-									<button type="submit" class="button-follow">
-										<i class="fa fa-heart"></i>
-										<span>Theo dõi</span>
-									</button>
-									<span><b>@Model.manga.FollowCount</b> Lượt theo dõi</span>
-								</form>
-							}
-							else if (Model.isFollowed)
-							{
-								<form method="post" asp-page-handler="unfollow">
-									<input name="mangaId" value="@Model.manga.Id" hidden />
-									<button type="submit" class="button-unfollow">
-										<i class="fa fa-times"></i>
-										<span>Bỏ theo dõi</span>
-									</button>
-									<span><b>@Model.manga.FollowCount</b> Lượt theo dõi</span>
-								</form>
-							}
-						}
-					</div>
-					<div class="read-action" style="margin-top: 10px">
-						<a class="link-button">Đọc từ đầu</a>
-						<a class="link-button">Đọc mới nhất</a>
-						@if (user2.Role == "Admin")
-						{
-							<a href="/add-chap/@Model.manga.Id" class="link-button">Thêm chapter</a>
-						}
-					</div>
+                                <div class="card__description card__description--details">
+                                    @Model.manga.Description
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end card content -->
+                    </div>
+                    <div>
+                        <ul class="ratings" style="{margin-top: 5px}">
+                            <li class="star" id="star-5" onclick="handleRate(5)"></li>
+                            <li class="star" id="star-4" onclick="handleRate(4)"></li>
+                            <li class="star" id="star-3" onclick="handleRate(3)"></li>
+                            <li class="star" id="star-2" onclick="handleRate(2)"></li>
+                            <li class="star" id="star-1" onclick="handleRate(1)"></li>
+                        </ul>
+                    </div>
+                    <div class="follow">
+                        @if (user2 != null)
+                        {
+                            if (!Model.isFollowed)
+                            {
+                                <form method="post" asp-page-handler="follow">
+                                    <input name="mangaId" value="@Model.manga.Id" hidden/>
+                                    <button type="submit" class="button-follow">
+                                        <i class="fa fa-heart"></i>
+                                        <span>Theo dõi</span>
+                                    </button>
+                                    <span><b>@Model.manga.FollowCount</b> Lượt theo dõi</span>
+                                </form>
+                            }
+                            else if (Model.isFollowed)
+                            {
+                                <form method="post" asp-page-handler="unfollow">
+                                    <input name="mangaId" value="@Model.manga.Id" hidden/>
+                                    <button type="submit" class="button-unfollow">
+                                        <i class="fa fa-times"></i>
+                                        <span>Bỏ theo dõi</span>
+                                    </button>
+                                    <span><b>@Model.manga.FollowCount</b> Lượt theo dõi</span>
+                                </form>
+                            }
+                        }
+                    </div>
+                    <div class="read-action" style="margin-top: 10px;  display: flex;">
+                        <form method="post" asp-page-handler="ReadContinues" style="margin-right: 15px; ">
+                            <input name="mangaId" value="@Model.manga.Id" hidden/>
+                            <button type="submit" class="link-button">Đọc tiếp</button>
+                        </form>
+                        <form method="post" asp-page-handler="FirstChapter">
+                            <input name="mangaId" value="@Model.manga.Id" hidden/>
+                            <button class="link-button">Đọc mới nhất</button>
+                        </form>
+                        @if (user2?.Role == "Admin")
+                        {
+                            <a href="/add-chap/@Model.manga.Id" class="link-button">Thêm chapter</a>
+                        }
+                    </div>
 
-				</div>
-			</div>
-			<!-- end content -->
-			<!-- accordion -->
-			<div class="col-12 col-xl-6">
-				<div class="card-body">
-					<table class="accordion__list">
-						<thead>
-							<tr>
-								<th>Số chương</th>
-								<th>Tên</th>
-								<th>Cập nhật</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach (var chapter in Model.manga.Chapteres)
-							{
-								<tr>
-									<th>@chapter.ChapterNumber</th>
-									<td>
-										<a asp-page="/Public/DetailChapter" asp-route-id="@chapter.Id" class="chapter_name">@chapter.Name</a>
-									</td>
-									<td>@chapter.CreatedAt.ToString("dd/MM/yy")</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-			</div>
-			<!-- end accordion -->
-		</div>
-	</div>
-	<!-- end details content -->
+                </div>
+            </div>
+            <!-- end content -->
+            <!-- accordion -->
+            <div class="col-12 col-xl-6">
+                <div class="card-body">
+                    <table class="accordion__list">
+                        <thead>
+                        <tr>
+                            <th>Số chương</th>
+                            <th>Tên</th>
+                            <th>Cập nhật</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var chapter in Model.manga.Chapteres)
+                        {
+                            <tr>
+                                <th>@chapter.ChapterNumber</th>
+                                @if (chapter.Status == (int)StatusChapterEnum.ChapterPublic)
+                                {
+                                    <td>
+                                        <a asp-page="/Public/DetailChapter" asp-route-id="@chapter.Id" class="chapter_name">@chapter.Name</a>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="display: flex" class="disabled">
+                                        <a asp-page="/Public/DetailChapter" asp-route-id="@chapter.Id" class="chapter_name">@chapter.Name</a>
+                                        <p style="color: yellow; margin: 0;">Vip</p>
+                                        @if (user2 == null || user2.Role == UserRoleEnum.NormalUser.ToString())
+                                        {
+                                            <div class="td-vip" style="background: black;width: 19%; position: absolute;height: 21px;opacity: 0.3;"></div>
+                                        }
+                                    </td>
+                                }
+                                <td>@chapter.CreatedAt.ToString("dd/MM/yy")</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- end accordion -->
+        </div>
+    </div>
+    <!-- end details content -->
 </section>
 <!-- end details -->
 <!-- content -->
 <section class="content">
-	<div class="content__head">
-		<div class="container">
-			<div class="row">
-				<div class="col-12">
-					<!-- content title -->
-					<h2 class="content__title">Diễn đàn</h2>
-					<!-- end content title -->
-					<!-- content tabs nav -->
-					<ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
-						<li class="nav-item">
-							<a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Bình luận</a>
-						</li>
-					</ul>
-					<!-- end content tabs nav -->
-					<!-- content mobile tabs nav -->
-					<div class="content__mobile-tabs" id="content__mobile-tabs">
-						<div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<input type="button" value="Bình Luận">
-							<span></span>
-						</div>
+    <div class="content__head">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <!-- content title -->
+                    <h2 class="content__title">Diễn đàn</h2>
+                    <!-- end content title -->
+                    <!-- content tabs nav -->
+                    <ul class="nav nav-tabs content__tabs" id="content__tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Bình luận</a>
+                        </li>
+                    </ul>
+                    <!-- end content tabs nav -->
+                    <!-- content mobile tabs nav -->
+                    <div class="content__mobile-tabs" id="content__mobile-tabs">
+                        <div class="content__mobile-tabs-btn dropdown-toggle" role="navigation" id="mobile-tabs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="Bình Luận">
+                            <span></span>
+                        </div>
 
-						<div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
-							<ul class="nav nav-tabs" role="tablist">
-								<li class="nav-item"><a class="nav-link active" id="1-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Bình luận</a></li>
-							</ul>
-						</div>
-					</div>
-					<!-- end content mobile tabs nav -->
-				</div>
-			</div>
-		</div>
-	</div>
+                        <div class="content__mobile-tabs-menu dropdown-menu" aria-labelledby="mobile-tabs">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="1-tab" data-toggle="tab" href="#tab-1" role="tab" aria-controls="tab-1" aria-selected="true">Bình luận</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end content mobile tabs nav -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="container">
-		<div class="row">
-			<div class="col-12 col-lg-8 col-xl-8">
-				<!-- content tabs -->
-				<div class="tab-content" id="myTabContent">
-					<div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
-						<div class="row">
-							<!-- comments -->
-							<div class="col-12">
-								<div class="comments">
-									<ul class="comments__list">
-										@foreach (var comment in Model.ListComment)
-										{
-											<li class="comments__item">
-												<div class="comments__autor">
-													@if (comment.User.Avatar is not null)
-													{
-														<img class="comments__avatar" src="/image/avartar-user/@comment.User.Avatar" alt="">
-													}
-													else
-													{
-														<img class="comments__avatar" src="/lib/img/avatar-default.jpg" alt="">
-													}
-													<span class="comments__name">@comment.User.FullName</span>
-													<span class="comments__time">@comment.CreatedAt.ToString("MM/dd/yyyy")</span>
-												</div>
-												<p class="comments__text">@comment.Content</p>
-												<div class="comments__actions">
-													<div class="comments__rate">
-														<form method="post" asp-page-handler="likeComment">
-															<input name="commentId" value="@comment.Id" hidden />
-															<input name="mangaId" value="@Model.manga.Id" hidden />
-															<button type="submit">
-																<i class="icon ion-md-thumbs-up" style="color: green"></i>
-																@comment.LikedCount
-															</button>
-														</form>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-8 col-xl-8">
+                <!-- content tabs -->
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="1-tab">
+                        <div class="row">
+                            <!-- comments -->
+                            <div class="col-12">
+                                <div class="comments">
+                                    <ul class="comments__list">
+                                        @foreach (var comment in Model.ListComment)
+                                        {
+                                            <li class="comments__item">
+                                                <div class="comments__autor">
+                                                    @if (comment.User.Avatar is not null)
+                                                    {
+                                                        <img class="comments__avatar" src="/image/avartar-user/@comment.User.Avatar" alt="">
+                                                    }
+                                                    else
+                                                    {
+                                                        <img class="comments__avatar" src="/lib/img/avatar-default.jpg" alt="">
+                                                    }
+                                                    <span class="comments__name">@comment.User.FullName</span>
+                                                    <span class="comments__time">@comment.CreatedAt.ToString("MM/dd/yyyy")</span>
+                                                </div>
+                                                <p class="comments__text">@comment.Content</p>
+                                                <div class="comments__actions">
+                                                    <div class="comments__rate">
+                                                        <form method="post" asp-page-handler="likeComment">
+                                                            <input name="commentId" value="@comment.Id" hidden/>
+                                                            <input name="mangaId" value="@Model.manga.Id" hidden/>
+                                                            <button type="submit">
+                                                                <i class="icon ion-md-thumbs-up" style="color: green"></i>
+                                                                @comment.LikedCount
+                                                            </button>
+                                                        </form>
 
-														<form method="post" asp-page-handler="unlikeComment">
-															<input name="commentId" value="@comment.Id" hidden />
-															<input name="mangaId" value="@Model.manga.Id" hidden />
-															<button type="submit">
-																@comment.DislikedCount
-																<i class="icon ion-md-thumbs-down" style="margin-left: 6px; color: red"></i>
-															</button>
-														</form>
-													</div>
-												</div>
-											</li>
-										}
-									</ul>
+                                                        <form method="post" asp-page-handler="unlikeComment">
+                                                            <input name="commentId" value="@comment.Id" hidden/>
+                                                            <input name="mangaId" value="@Model.manga.Id" hidden/>
+                                                            <button type="submit">
+                                                                @comment.DislikedCount
+                                                                <i class="icon ion-md-thumbs-down" style="margin-left: 6px; color: red"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
 
-									<form method="post" asp-page-handler="addComment" class="form">
-										<input name="mangaId" value="@Model.manga.Id" hidden />
-										<textarea id="text" name="comment" class="form__textarea" placeholder="Viết bình luận"></textarea>
-										<button type="submit" class="form__btn">Gửi</button>
-									</form>
-								</div>
-							</div>
-							<!-- end comments -->
-						</div>
-					</div>
-				</div>
-				<!-- end content tabs -->
-			</div>
-		</div>
-	</div>
+                                    <form method="post" asp-page-handler="addComment" class="form">
+                                        <input name="mangaId" value="@Model.manga.Id" hidden/>
+                                        <textarea id="text" name="comment" class="form__textarea" placeholder="Viết bình luận"></textarea>
+                                        <button type="submit" class="form__btn">Gửi</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- end comments -->
+                        </div>
+                    </div>
+                </div>
+                <!-- end content tabs -->
+            </div>
+        </div>
+    </div>
 </section>
 <!-- end content -->
 
@@ -304,4 +333,3 @@
     //                                     </form>
 	
 </script>
-

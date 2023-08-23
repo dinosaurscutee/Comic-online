@@ -11,17 +11,19 @@ namespace MangaOnline.Pages.Public
     {
         private readonly MangaOnlineV1DevPRN221Context db;
         public Manga manga = new Manga();
-		public bool isFollowed = false;
-		public List<Manga> ListManga = new List<Manga>();
+        public bool isFollowed = false;
+        public List<Manga> ListManga = new List<Manga>();
         public Dictionary<Guid, List<Category>> mangaCategoryDict = new Dictionary<Guid, List<Category>>();
         public List<Comment> ListComment = new List<Comment>();
         public Comment comment = new Comment();
 
         private UserCookie user = new UserCookie();
+
         public DetailMangaModel(MangaOnlineV1DevPRN221Context db)
         {
             this.db = db;
         }
+
         public UserCookie GetUser()
         {
             var accessToken = HttpContext.Request.Cookies["USER_DATA"];
@@ -33,8 +35,10 @@ namespace MangaOnline.Pages.Public
             {
                 user = null;
             }
+
             return user;
         }
+
         public void OnGet(string id)
         {
             user = GetUser();
@@ -43,119 +47,159 @@ namespace MangaOnline.Pages.Public
             var author = db.Authors.FirstOrDefault(x => x.Id == manga.AuthorId);
             manga.Author = author;
 
-            var chapters = db.Chapteres.Where(x => x.MangaId == manga.Id).ToList();
+            var chapters = db.Chapteres.Where(x => x.MangaId == manga.Id).OrderBy(x=>x.ChapterNumber).ToList();
             manga.Chapteres = chapters;
 
             var mList = db.Mangas.ToList();
             ListManga = mList.Where(x => x.Id != Guid.Parse(id)).ToList();
 
-			var cmList = db.CategoryMangas.ToList();
-			var cList = db.Categories.ToList();
+            var cmList = db.CategoryMangas.ToList();
+            var cList = db.Categories.ToList();
 
-			foreach (var ma in mList)
-			{
-				var cateResult = from c in cList
-								 join cm in cmList
-									 on c.Id equals cm.CategoryId
-								 join m in mList
-									 on cm.MangaId equals m.Id
-								 where m.Id == ma.Id
-								 select c;
-				mangaCategoryDict.Add(ma.Id, cateResult.ToList());
-			}
+            foreach (var ma in mList)
+            {
+                var cateResult = from c in cList
+                    join cm in cmList
+                        on c.Id equals cm.CategoryId
+                    join m in mList
+                        on cm.MangaId equals m.Id
+                    where m.Id == ma.Id
+                    select c;
+                mangaCategoryDict.Add(ma.Id, cateResult.ToList());
+            }
 
-			if (user != null)
-			{
-				var followManga = db.FollowLists.FirstOrDefault(x => x.UserId == user.Id && x.MangaId == manga.Id);
-				if (followManga != null)
-				{
-					isFollowed = true;
-				}
-			}
-			else
-			{
-				isFollowed = false;
-			}
+            if (user != null)
+            {
+                var followManga = db.FollowLists.FirstOrDefault(x => x.UserId == user.Id && x.MangaId == manga.Id);
+                if (followManga != null)
+                {
+                    isFollowed = true;
+                }
+            }
+            else
+            {
+                isFollowed = false;
+            }
 
-			manga.ViewCount++;
-			db.SaveChanges();
+            manga.ViewCount++;
+            db.SaveChanges();
 
-			ListComment = db.Comments
-				.Include(x => x.Manga)
-				.Include(x => x.User)
-				.Where(x => x.MangaId == manga.Id && x.IsActive == true).ToList();
+            ListComment = db.Comments
+                .Include(x => x.Manga)
+                .Include(x => x.User)
+                .Where(x => x.MangaId == manga.Id && x.IsActive == true).ToList();
+        }
 
-		}
-		public IActionResult OnPostFollow(string mangaId)
-		{
-			user = GetUser();
-			manga = db.Mangas.FirstOrDefault(x => x.Id == Guid.Parse(mangaId));
+        public IActionResult OnPostFollow(string mangaId)
+        {
+            user = GetUser();
+            manga = db.Mangas.FirstOrDefault(x => x.Id == Guid.Parse(mangaId));
 
-			var followManga = new FollowList()
-			{
-				Id = Guid.NewGuid(),
-				UserId = user.Id,
-				MangaId = manga.Id
-			};
-			db.FollowLists.Add(followManga);
-			db.SaveChanges();
+            var followManga = new FollowList()
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                MangaId = manga.Id
+            };
+            db.FollowLists.Add(followManga);
+            db.SaveChanges();
 
-			manga.FollowCount++;
-			db.SaveChanges();
+            manga.FollowCount++;
+            db.SaveChanges();
 
-			return RedirectToPage("/Public/DetailManga", new { id = mangaId });
-		}
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
 
-		public IActionResult OnPostUnfollow(string mangaId)
-		{
-			user = GetUser();
-			manga = db.Mangas.FirstOrDefault(x => x.Id == Guid.Parse(mangaId));
+        public IActionResult OnPostUnfollow(string mangaId)
+        {
+            user = GetUser();
+            manga = db.Mangas.FirstOrDefault(x => x.Id == Guid.Parse(mangaId));
 
-			var followManga = db.FollowLists.FirstOrDefault(x => x.UserId == user.Id && x.MangaId == manga.Id);
-			db.FollowLists.Remove(followManga);
-			db.SaveChanges();
+            var followManga = db.FollowLists.FirstOrDefault(x => x.UserId == user.Id && x.MangaId == manga.Id);
+            db.FollowLists.Remove(followManga);
+            db.SaveChanges();
 
-			manga.FollowCount--;
-			db.SaveChanges();
+            manga.FollowCount--;
+            db.SaveChanges();
 
-			return RedirectToPage("/Public/DetailManga", new { id = mangaId });
-		}
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
 
-		public IActionResult OnPostLikeComment(string commentId, string mangaId)
-		{
-			var commentObj = db.Comments.FirstOrDefault(x => x.Id == Guid.Parse(commentId));
-			commentObj.LikedCount++;
-			db.SaveChanges();
-			return RedirectToPage("/Public/DetailManga", new { id = mangaId });
-		}
+        public IActionResult OnPostLikeComment(string commentId, string mangaId)
+        {
+            var commentObj = db.Comments.FirstOrDefault(x => x.Id == Guid.Parse(commentId));
+            commentObj.LikedCount++;
+            db.SaveChanges();
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
 
-		public IActionResult OnPostUnlikeComment(string commentId, string mangaId)
-		{
-			var commentObj = db.Comments.FirstOrDefault(x => x.Id == Guid.Parse(commentId));
-			commentObj.DislikedCount++;
-			db.SaveChanges();
-			return RedirectToPage("/Public/DetailManga", new { id = mangaId });
-		}
+        public IActionResult OnPostUnlikeComment(string commentId, string mangaId)
+        {
+            var commentObj = db.Comments.FirstOrDefault(x => x.Id == Guid.Parse(commentId));
+            commentObj.DislikedCount++;
+            db.SaveChanges();
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
 
-		public IActionResult OnPostAddComment(string comment, string mangaId)
-		{
-			user = GetUser();
-			var newComment = new Comment()
-			{
-				Id = Guid.NewGuid(),
-				MangaId = Guid.Parse(mangaId),
-				UserId = user.Id,
-				Content = comment,
+        public IActionResult OnPostAddComment(string comment, string mangaId)
+        {
+            user = GetUser();
+            var newComment = new Comment()
+            {
+                Id = Guid.NewGuid(),
+                MangaId = Guid.Parse(mangaId),
+                UserId = user.Id,
+                Content = comment,
 
-				CreatedAt = DateTimeOffset.Now,
-				LikedCount = 0,
-				DislikedCount = 0,
-				IsActive = true
-			};
-			db.Comments.Add(newComment);
-			db.SaveChanges();
-			return RedirectToPage("/Public/DetailManga", new { id = mangaId });
-		}
+                CreatedAt = DateTimeOffset.Now,
+                LikedCount = 0,
+                DislikedCount = 0,
+                IsActive = true
+            };
+            db.Comments.Add(newComment);
+            db.SaveChanges();
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
 
-	}
+        public IActionResult OnPostReadContinues(string mangaId)
+        {
+            var listChapter = Request.Cookies["LIST_CHAPTER"];
+            if (listChapter != null)
+            {
+                var listChapterId = JsonConvert.DeserializeObject<List<ChapterByManga>>(listChapter);
+                var chapter = listChapterId?.FirstOrDefault(x => x.MangaId.ToString() == mangaId);
+                if (chapter != null)
+                {
+                    var chapterId = chapter.ChapterId;
+                    var chapterWantTo = db.Chapteres.FirstOrDefault(x => x.Id == chapterId);
+                    if (chapterWantTo != null)
+                    {
+                        return RedirectToPage("/Public/DetailChapter", new { id = chapterWantTo.Id });
+                    }
+                }
+            }
+
+            var chapterFirst = db.Chapteres.Where(x => x.MangaId.ToString() == mangaId)
+                .OrderBy(x => x.ChapterNumber)
+                .FirstOrDefault();
+            if (chapterFirst != null)
+            {
+                return RedirectToPage("/Public/DetailChapter", new { id = chapterFirst.Id });
+            }
+
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
+
+        public IActionResult OnPostFirstChapter(string mangaId)
+        {
+            var chapterFirst = db.Chapteres.Where(x => x.MangaId.ToString() == mangaId)
+                .OrderBy(x => x.ChapterNumber)
+                .FirstOrDefault();
+            if (chapterFirst != null)
+            {
+                return RedirectToPage("/Public/DetailChapter", new { id = chapterFirst.Id });
+            }
+            return RedirectToPage("/Public/DetailManga", new { id = mangaId });
+        }
+    }
 }
