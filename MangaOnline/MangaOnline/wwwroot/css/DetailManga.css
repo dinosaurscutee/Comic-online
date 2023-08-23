@@ -1,0 +1,164 @@
+﻿.chapter_name {
+    font-size: 15px;
+    position: relative;
+    background-image: -webkit-linear-gradient(0deg, #ff55a5 0%, #ff5860 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: #ff5860;
+    margin-right: 7px;
+    opacity: 0.8;
+}
+
+    .chapter_name:hover {
+        opacity: 1;
+    }
+
+.follow span {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+    line-height: 25px;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.2px;
+}
+
+/* follow button */
+.button-follow {
+    position: relative;
+    background-color: #449D44;
+    border: none;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding: 15px;
+    width: 150px;
+    text-align: center;
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 15px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+    .button-follow:after {
+        content: "";
+        background: #f1f1f1;
+        display: block;
+        position: absolute;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px !important;
+        margin-top: -120%;
+        opacity: 0;
+        transition: all 0.8s
+    }
+
+    .button-follow:active:after {
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        transition: 0s
+    }
+
+    .button-follow:hover {
+        opacity: 1;
+    }
+
+/* unfollow button */
+.button-unfollow {
+    position: relative;
+    background-color: #C9302C;
+    border: none;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding: 15px;
+    width: 150px;
+    text-align: center;
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    border-radius: 15px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+    .button-unfollow:after {
+        content: "";
+        background: #f1f1f1;
+        display: block;
+        position: absolute;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px !important;
+        margin-top: -120%;
+        opacity: 0;
+        transition: all 0.8s
+    }
+
+    .button-unfollow:active:after {
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        transition: 0s
+    }
+
+    .button-unfollow:hover {
+        opacity: 1;
+    }
+
+.link-button {
+    background-color: #ec971f;
+    color: #FFFFFF !important;
+    padding: 1em 1.5em;
+    text-decoration: none;
+    border-radius: 15px;
+    opacity: 0.8;
+}
+
+    .link-button:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    .link-button:active {
+        background-color: black;
+    }
+
+    .link-button:visited {
+        background-color: #ccc;
+    }
+
+.ratings {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    direction: rtl;
+    text-align: left;
+}
+
+.star {
+    position: relative;
+    line-height: 30px;
+    display: inline-block;
+    transition: color 0.2s ease;
+    color: #ebebeb;
+}
+
+    .star:before {
+        content: '\2605';
+        width: 30px;
+        height: 30px;
+        font-size: 30px;
+    }
+
+    .star:hover,
+    .star.selected,
+    .star:hover ~ .star,
+    .star.selected ~ .star {
+        transition: color 0.8s ease;
+        color: #e19414;
+    }
