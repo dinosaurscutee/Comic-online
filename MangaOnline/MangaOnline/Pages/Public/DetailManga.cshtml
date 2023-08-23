@@ -1,4 +1,4 @@
-﻿@page 
+﻿@page
 @using MangaOnline.ModelCore
 @using Newtonsoft.Json
 @model MangaOnline.Pages.Public.DetailMangaModel
@@ -130,9 +130,15 @@
 							}
 						}
 					</div>
-					<div class="read-action" style="margin-top: 10px">
-						<a class="link-button">Đọc từ đầu</a>
-						<a class="link-button">Đọc mới nhất</a>
+					<div class="read-action" style="margin-top: 10px;  display: flex;">
+						<form method="post" asp-page-handler="ReadContinues" style="margin-right: 15px; ">
+							<input name="mangaId" value="@Model.manga.Id" hidden />
+							<button type="submit" class="link-button">Đọc tiếp</button>
+						</form>
+						<form method="post" asp-page-handler="FirstChapter">
+							<input name="mangaId" value="@Model.manga.Id" hidden />
+							<button class="link-button">Đọc mới nhất</button>
+						</form>
 						@if (user2.Role == "Admin")
 						{
 							<a href="/add-chap/@Model.manga.Id" class="link-button">Thêm chapter</a>
