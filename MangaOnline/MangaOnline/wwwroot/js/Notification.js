@@ -1,6 +1,8 @@
 ﻿function notification() {
     var myDiv = document.getElementById("alertNotification");
-    myDiv.remove();
+    if(myDiv!==null){
+        myDiv.remove();
+    }
 }
 
 // Chạy hàm sayHello sau 3 giây

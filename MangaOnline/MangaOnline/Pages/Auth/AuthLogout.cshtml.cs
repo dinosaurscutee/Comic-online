@@ -9,6 +9,7 @@ public class AuthLogout : PageModel
     {
         Response.Cookies.Delete("ACCESS_TOKEN");
         Response.Cookies.Delete("USER_DATA");
+        Response.Cookies.Delete("MANGA_FOLLOW");
         return RedirectToPage("/Auth/AuthLogin");
     }
 }
