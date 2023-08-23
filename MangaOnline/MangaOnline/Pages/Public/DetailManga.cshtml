@@ -101,15 +101,6 @@
                         </div>
                         <!-- end card content -->
                     </div>
-                    <div>
-                        <ul class="ratings" style="{margin-top: 5px}">
-                            <li class="star" id="star-5" onclick="handleRate(5)"></li>
-                            <li class="star" id="star-4" onclick="handleRate(4)"></li>
-                            <li class="star" id="star-3" onclick="handleRate(3)"></li>
-                            <li class="star" id="star-2" onclick="handleRate(2)"></li>
-                            <li class="star" id="star-1" onclick="handleRate(1)"></li>
-                        </ul>
-                    </div>
                     <div class="follow">
                         @if (user2 != null)
                         {
@@ -307,29 +298,3 @@
     </div>
 </section>
 <!-- end content -->
-
-<script>
-   let rate;
-	 window.onload =()=>{
-		// rate = document.getElementById("manga-star").innerHTML;
-		renderRate();
-	}
-	
-	const renderRate = (_rate)=>{
-		  for (let i=1;i<=5;i++){
-                  			 document.getElementById(`star-${i}`).style.color = "#c9c9c9";
-                  		 }
-		  for (let i=1;i<=_rate;i++){
-         			 document.getElementById(`star-${i}`).style.color = "#e19414";
-         		 }
-	}
-	const handleRate= (_rate)=>{
-		 rate = _rate;
-		 renderRate(rate);
-	}
-	// <form action="/update-rate" class="form" style="{display: none}">
-    //                                     		<textarea id="text" name="text" class="form__textarea" placeholder="Add comment"></textarea>
-    // 										<button type="button" />
-    //                                     </form>
-	
-</script>
