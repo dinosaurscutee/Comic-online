@@ -38,6 +38,7 @@ namespace MangaOnline.Pages.Public
 
 		public void OnGet()
 		{
+			Response.Cookies.Delete("NotiFollowStatus");
 			user = GetUser();
 			var totalManga = db.FollowLists.Count();
 
