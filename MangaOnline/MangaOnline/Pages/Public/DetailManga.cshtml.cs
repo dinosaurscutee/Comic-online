@@ -47,7 +47,7 @@ namespace MangaOnline.Pages.Public
             var author = db.Authors.FirstOrDefault(x => x.Id == manga.AuthorId);
             manga.Author = author;
 
-            var chapters = db.Chapteres.Where(x => x.MangaId == manga.Id).ToList();
+            var chapters = db.Chapteres.Where(x => x.MangaId == manga.Id).OrderBy(x=>x.ChapterNumber).ToList();
             manga.Chapteres = chapters;
 
             var mList = db.Mangas.ToList();
