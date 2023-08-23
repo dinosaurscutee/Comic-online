@@ -82,7 +82,26 @@ public class AuthLogin : PageModel
             };
 
             var jsonStr = JsonConvert.SerializeObject(userCookie);
-
+            
+            // add list mangaFollowId on cookie
+            var listMangaIdFollow = _context.FollowLists
+                .Where(x => x.UserId == user.Id)
+                .Select(x=>x.MangaId).ToList();
+            if (listMangaIdFollow.Count>0)
+            {
+                var followStr = "";
+                foreach (var fId in listMangaIdFollow)
+                {
+                    followStr += fId;
+                    if (!fId.Equals(listMangaIdFollow[^1]))
+                    {
+                        followStr += ",";
+                    }
+                }
+                Response.Cookies.Append("MANGA_FOLLOW", followStr);
+            }
+            // add list mangaFollowId on cookie
+            
             if (UserLogin.RememberAccount)
             {
                 var cookieOptions1 = new CookieOptions

@@ -101,6 +101,26 @@ namespace MangaOnline.Pages.Public
                 UserId = user.Id,
                 MangaId = manga.Id
             };
+            
+            // add list mangaFollowId on cookie
+            var listMangaIdFollow = db.FollowLists
+                .Where(x => x.UserId == user.Id)
+                .Select(x=>x.MangaId).ToList();
+            if (listMangaIdFollow.Count>0)
+            {
+                var followStr = "";
+                foreach (var fId in listMangaIdFollow)
+                {
+                    followStr += fId;
+                    if (!fId.Equals(listMangaIdFollow[^1]))
+                    {
+                        followStr += ",";
+                    }
+                }
+                Response.Cookies.Append("MANGA_FOLLOW", followStr);
+            }
+            // add list mangaFollowId on cookie
+            
             db.FollowLists.Add(followManga);
             db.SaveChanges();
 
@@ -116,6 +136,24 @@ namespace MangaOnline.Pages.Public
             manga = db.Mangas.FirstOrDefault(x => x.Id == Guid.Parse(mangaId));
 
             var followManga = db.FollowLists.FirstOrDefault(x => x.UserId == user.Id && x.MangaId == manga.Id);
+            // add list mangaFollowId on cookie
+            var listMangaIdFollow = db.FollowLists
+                .Where(x => x.UserId == user.Id)
+                .Select(x=>x.MangaId).ToList();
+            if (listMangaIdFollow.Count>0)
+            {
+                var followStr = "";
+                foreach (var fId in listMangaIdFollow)
+                {
+                    followStr += fId;
+                    if (!fId.Equals(listMangaIdFollow[^1]))
+                    {
+                        followStr += ",";
+                    }
+                }
+                Response.Cookies.Append("MANGA_FOLLOW", followStr);
+            }
+            // add list mangaFollowId on cookie
             db.FollowLists.Remove(followManga);
             db.SaveChanges();
 
