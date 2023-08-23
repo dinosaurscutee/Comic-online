@@ -279,4 +279,29 @@
 </section>
 <!-- end content -->
 
+<script>
+   let rate;
+	 window.onload =()=>{
+		// rate = document.getElementById("manga-star").innerHTML;
+		renderRate();
+	}
+	
+	const renderRate = (_rate)=>{
+		  for (let i=1;i<=5;i++){
+                  			 document.getElementById(`star-${i}`).style.color = "#c9c9c9";
+                  		 }
+		  for (let i=1;i<=_rate;i++){
+         			 document.getElementById(`star-${i}`).style.color = "#e19414";
+         		 }
+	}
+	const handleRate= (_rate)=>{
+		 rate = _rate;
+		 renderRate(rate);
+	}
+	// <form action="/update-rate" class="form" style="{display: none}">
+    //                                     		<textarea id="text" name="text" class="form__textarea" placeholder="Add comment"></textarea>
+    // 										<button type="button" />
+    //                                     </form>
+	
+</script>
 
