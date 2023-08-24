@@ -74,7 +74,24 @@ namespace MangaOnline.Pages.Public
 
 			manga.FollowCount--;
 			db.SaveChanges();
-
+			// add list mangaFollowId on cookie
+			var listMangaIdFollow = db.FollowLists
+				.Where(x => x.UserId == user.Id)
+				.Select(x=>x.MangaId).ToList();
+			if (listMangaIdFollow.Count>0)
+			{
+				var followStr = "";
+				foreach (var fId in listMangaIdFollow)
+				{
+					followStr += fId;
+					if (!fId.Equals(listMangaIdFollow[^1]))
+					{
+						followStr += ",";
+					}
+				}
+				Response.Cookies.Append("MANGA_FOLLOW", followStr);
+			}
+			// add list mangaFollowId on cookie
 			return RedirectToPage("/Public/FollowedList");
 		}
 
