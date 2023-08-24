@@ -1,5 +1,7 @@
-﻿using MangaOnline.Extensions;
+﻿using MangaOnline.Enum;
+using MangaOnline.Extensions;
 using MangaOnline.Models;
+using MangaOnline.Pages.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MangaOnline.Pages.Manage
 {
-    public class addnewmangaModel : PageModel
+    public class addnewmangaModel : AbstractModel
     {
         private readonly MangaOnlineV1DevPRN221Context _context;
         private readonly ILogicHandler _logicHandler;
@@ -38,6 +40,9 @@ namespace MangaOnline.Pages.Manage
         }
         public IActionResult OnGet(Guid? mangaId)
         {
+            if (!CheckRoleUser(new[] { UserRoleEnum.Admin.ToString() }))
+                return RedirectToPage("/Error");
+
             authors = _context.Authors.ToList();
             categories = _context.Categories.ToList();
             var mangaOld = _context.Mangas
@@ -55,6 +60,9 @@ namespace MangaOnline.Pages.Manage
         }
         public async Task<IActionResult> OnPost()
         {
+            if (!CheckRoleUser(new[] { UserRoleEnum.Admin.ToString() }))
+                return RedirectToPage("/Error");
+
             categories = _context.Categories.ToList();
             if (RequestAddManga.MangaId is null)
             {
@@ -80,7 +88,7 @@ namespace MangaOnline.Pages.Manage
                     Description = description,
                     CreatedAt = utcTime2,
                     ModifiedAt = DateTimeOffset.Now,
-                    IsActive = RequestAddManga.IsActive,
+                    IsActive = true,
                     Image = _logicHandler.CreateImage(RequestAddManga.Image)
                 };
                 if (RequestAddManga.Status.Equals("Hoàn thành"))
@@ -119,7 +127,6 @@ namespace MangaOnline.Pages.Manage
                     mangaOld.Name = RequestAddManga.Name;
                     mangaOld.Author.Name = RequestAddManga.AuthorName;
                     mangaOld.Description = description;
-                    mangaOld.IsActive = RequestAddManga.IsActive;
                     foreach (var categoryId in CategoriesId)
                     {
                         _context.CategoryMangas
@@ -129,6 +136,16 @@ namespace MangaOnline.Pages.Manage
                     utcTime1 = DateTime.SpecifyKind(utcTime1, DateTimeKind.Utc);
                     DateTimeOffset utcTime2 = utcTime1;
                     mangaOld.CreatedAt = utcTime2;
+                    
+                    if (RequestAddManga.Status.Equals("Hoàn thành")){
+                        mangaOld.Status = 0;
+                    }
+                    else if (RequestAddManga.Status.Equals("Đang cập nhật")){
+                        mangaOld.Status = 1;
+                    }
+                    else if (RequestAddManga.Status.Equals("Dừng cập nhật")){
+                        mangaOld.Status = 2;
+                    }
                     mangaOld.ModifiedAt = DateTimeOffset.Now;
                     mangaOld.Image =
                         RequestAddManga.Image is null ?

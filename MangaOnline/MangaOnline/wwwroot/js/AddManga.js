@@ -61,15 +61,15 @@ submitBtn.addEventListener("click", function(e) {
         notiCategory.innerHTML = "Cần chọn ít nhất 1 thể loại";
         fail = true;
     }
-   if(status.value === 'Trạng thái'){
-       notiStatus.innerHTML = "chưa chọn trạng thái";
+    if (statusValue.value === 'Trạng thái'){
+       notiStatus.innerHTML = "Chưa chọn trạng thái";
        fail = true;
-   }
-   if(!/^\d+$/.test(createdAt.value)){
+    }
+    if(!/^\d+$/.test(createdAt.value)){
        console.log(createdAt.value);
-       notiCreatedAt.innerHTML = "năm sai";
+       notiCreatedAt.innerHTML = "Năm sai";
        fail = true;
-   }
+    }
     if(fail){
         e.preventDefault();
     }

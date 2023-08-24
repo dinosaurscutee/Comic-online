@@ -28,6 +28,10 @@
                                     <p class="input-title">Chapter Number</p>
                                     <input type="number" name="ChapNumber" class="sign__input">
                                 </div>
+                                <div class="sign__group sign__group--checkbox">
+                                    <input type="checkbox" id="isStatus" name="isStatus" asp-for="@Model.isStatus" value="true">
+                                    <label for="isStatus" class="input-title">Người dùng VIP</label>
+                                </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="input-group-add">
@@ -45,7 +49,7 @@
                                     </div>
                                     <div style="display:none;color: green;font-size:12px;" id="done_success">Add thành công chapter mới</div>
                                     <div style="display:none" id="take_notice">@ViewData["done"]</div>
-                                </div>
+                                </div>                          
                             </div>
 
                         </div>

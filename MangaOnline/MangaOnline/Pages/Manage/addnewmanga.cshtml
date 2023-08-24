@@ -21,9 +21,9 @@
                 </div>
 
                 <div style="padding-top:20px">
-                    <label style="font-size:22px; color:white;" for="title">Tên tác giả</label>
+                    <label style="font-size:22px; color:white;" for="title">Tên tác giả: </label>
                     <input asp-for="RequestAddManga.AuthorName" value="@Model.MangaUpdate?.Author.Name" type="text" required maxlength="20" class="sign__input" placeholder="dưới 20 ký tự" style="margin-left: 10px">
-                    <p class="noti"></p>
+                    <p style="color: #dc3545; margin: 0px; font-size: 12px; padding-left: 5px;"></p>
                 </div>
 
                 <div>
@@ -40,7 +40,7 @@
                             <li style="color:black;">Dừng cập nhật</li>
                         </ul>
                     </div>
-                    <p class="noti" id="noti-status"></p>
+                    <p style="color: #dc3545; margin: 0px; font-size: 12px; padding-left: 5px;" id="noti-status"></p>
                 </div>
 
                 <div>
@@ -67,12 +67,12 @@
                         </div>
                     </div>
                     <!-- end filter item -->
-                    <p class="noti" id="noti-category"></p>
+                    <p style="color: #dc3545; margin: 0px; font-size: 12px; padding-left: 5px;" id="noti-category"></p>
                 </div>
 
                 <div>
                     <div class="input-group-add">
-                        <p style=" line-height: 15px; color: rgba(255, 255, 255, 0.5);  margin-bottom: 5px;">Năm xuất bản</p>
+                        <p style=" line-height: 15px; color: rgba(255, 255, 255, 0.5);  margin-bottom: 20px;">Năm xuất bản: </p>
                         <input asp-for="RequestAddManga.CreatedAt" value="@Model.MangaUpdate?.CreatedAt!.Value.Year" id="input-createdAt" type="text" required maxlength="4" class="sign__input">
                         <p style="color: #dc3545; margin: 0px; font-size: 12px; padding-left: 5px;" id="CreatedAt"></p>
                     </div>
@@ -117,7 +117,7 @@
                 </div>
 
                 <div class="col-sm-6" style="max-height: 120px;">
-                    <button class="sign__btn" id="submitBtn" type="submit">Tạo Manga</button>
+                    <button class="sign__btn" id="submitBtn" type="submit">Submit</button>
                 </div>
             </form>            
         </div>        
