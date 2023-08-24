@@ -1,7 +1,9 @@
 using MangaOnline.Extensions;
+using MangaOnline.Hubs;
 using MangaOnline.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MangaOnline.Pages.Public
 {
@@ -9,10 +11,14 @@ namespace MangaOnline.Pages.Public
     {
         private readonly MangaOnlineV1DevPRN221Context _context;
         private readonly ILogicHandler _logicHandler;
-        public AddChapterModel(MangaOnlineV1DevPRN221Context mangaOnlineV1DevContext, ILogicHandler logicHandler)
+        private IHubContext<NotificationHub> HubContext;
+
+        public AddChapterModel(MangaOnlineV1DevPRN221Context mangaOnlineV1DevContext, ILogicHandler logicHandler,
+            IHubContext<NotificationHub> HubContext)
         {
             _context = mangaOnlineV1DevContext;
             _logicHandler = logicHandler;
+            this.HubContext = HubContext;
         }
 
         public Guid? MangaId { get; set; }
@@ -53,7 +59,7 @@ namespace MangaOnline.Pages.Public
             _context.SaveChanges();
             manga = _context.Mangas.FirstOrDefault(x => x.Id == chaptere.MangaId);
             ViewData["done"] = 1;
-
+            await HubContext.Clients.All.SendAsync("LoadNotification", manga.Id);
             return Page();
         }
     }
