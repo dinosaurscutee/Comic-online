@@ -180,6 +180,10 @@ namespace MangaOnline.Pages.Public
         public IActionResult OnPostAddComment(string comment, string mangaId)
         {
             user = GetUser();
+            if(user == null)
+            {
+               return RedirectToPage("/Auth/AuthLogin");
+            }    
             var newComment = new Comment()
             {
                 Id = Guid.NewGuid(),
