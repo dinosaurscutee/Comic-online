@@ -208,6 +208,10 @@
                     </table>
                 </div>
                 <!-- paginator -->
+                 @if(Model.ListManga.Any())
+                 {
+
+                 
                 <div class="col-12">
                     <ul class="paginator">
                         @{
@@ -244,6 +248,7 @@
                         </li>
                     </ul>
                 </div>
+                }
                 <!-- end paginator -->
             </div>
 

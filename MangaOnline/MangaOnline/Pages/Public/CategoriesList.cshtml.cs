@@ -101,8 +101,22 @@ public class CategoriesList : PageModel
         {
             listManga = listManga.Skip(PageSize * (index - 1)).Take(PageSize).ToList();
         }
+        switch (strSort)
+        {
+            case "ViewCount":
+                listManga = listManga.OrderByDescending(x => x.ViewCount).ToList();
+                break;
+            case "ModifiedAt":
+                listManga = listManga.OrderByDescending(x => x.ModifiedAt).ToList();
+                break;
+            case "FollowCount":
+                listManga = listManga.OrderByDescending(x => x.FollowCount).ToList();
+                break;
+            default:
+                listManga= listManga.OrderByDescending(x => x.ModifiedAt).ToList();
+                break;
+        }
 
-        listManga = (from m in listManga orderby strSort select m).ToList();
 
         foreach (var manga in listManga)
         {

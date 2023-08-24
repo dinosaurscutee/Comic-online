@@ -148,7 +148,7 @@
                         <!-- filter btn -->
                         <div class="label-apply">
                             <div class="filter__item" style="margin-right: 20px;">
-                                <a href="/manage/listmanga">
+                                <a href="/tim-truyen">
                                     <div class="btn-status-plink">
                                         <i class="icon ion-ios-refresh-circle"></i>
                                     </div>
@@ -207,45 +207,6 @@
                 </div>
             }
             <!-- end card -->
-
-            <!-- paginator -->
-                <div class="col-12">
-                    <ul class="paginator">
-                        @{
-                            var back = Model.PageIndex>1?"":"disabled";
-                            var next = Model.PageIndex!=Model.LastPage?"":"disabled";
-                        }
-                        <li class="paginator__item paginator__item--prev @back">
-                            
-                            <a href="@routeUrl@(Model.PageIndex-1)" class="">
-                                <i class="icon ion-ios-arrow-back"></i>
-                            </a>
-                        </li>
-                        @{
-                            if (Model.PageIndex>1)
-                            {
-                                <li class="paginator__item ">
-                                    <a href="@routeUrl@(Model.PageIndex-1)">@(Model.PageIndex-1)</a>
-                                </li>
-                            }
-                            <li class="paginator__item paginator__item--active">
-                                <a>@Model.PageIndex</a>
-                            </li>
-                            if (Model.PageIndex!=Model.LastPage)
-                            {
-                                <li class="paginator__item">
-                                    <a href="@routeUrl@(Model.PageIndex+1)">@(Model.PageIndex+1)</a>
-                                </li>
-                            }
-                        }
-                        <li class="paginator__item paginator__item--next @next">
-                            <a href="@routeUrl@(Model.PageIndex+1)">
-                                <i class="icon ion-ios-arrow-forward"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- end paginator -->
         </div>
     </div>
 </div>
