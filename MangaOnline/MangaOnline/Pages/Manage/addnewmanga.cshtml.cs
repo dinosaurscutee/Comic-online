@@ -32,9 +32,11 @@ namespace MangaOnline.Pages.Manage
         public Guid? MangaId { get; set; }
 
         public Manga? MangaUpdate { get; set; } = default;
-        public addnewmangaModel(MangaOnlineV1DevPRN221Context context)
+        public addnewmangaModel(MangaOnlineV1DevPRN221Context context, ILogicHandler _logicHandler)
         { 
             _context = context;
+            this._logicHandler = _logicHandler;
+
         }
         public IActionResult OnGet(Guid? mangaId)
         {

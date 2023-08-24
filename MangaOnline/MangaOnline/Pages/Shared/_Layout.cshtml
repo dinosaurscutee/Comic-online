@@ -113,9 +113,7 @@
 
                         <!-- header auth -->
                         <div class="header__auth">
-                            <button class="header__search-btn" type="button">
-                                <i class="icon ion-ios-search"></i>
-                            </button>
+                           
                             @{
                                 if (user2 is null)
                                 {
@@ -141,10 +139,13 @@
                                             <li>
                                                 <a href="/Auth/ChangePassword">Đổi mật khẩu</a>
                                             </li>
-                                            <li>
-                                                <a href="/sub-account-vip/pay-result">Lịch sử giao dịch</a>
-                                            </li>
-                                            @if (user2.Role=="NormalUser")
+                                                @if (user2.Role == "NormalUser" || user2.Role == "VipUser")
+                                                {
+                                                    <li>
+                                                        <a href="/sub-account-vip/pay-result">Lịch sử giao dịch</a>
+                                                    </li>
+                                                }
+                                                @if (user2.Role=="NormalUser")
                                             {
                                                 <li>
                                                     <a href="/sub-account-vip/index">Nâng cấp tài khoản</a>

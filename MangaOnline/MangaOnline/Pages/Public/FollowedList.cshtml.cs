@@ -36,10 +36,15 @@ namespace MangaOnline.Pages.Public
 			return user;
 		}
 
-		public void OnGet()
+		public IActionResult OnGet()
 		{
 			Response.Cookies.Delete("NotiFollowStatus");
 			user = GetUser();
+			if(user == null)
+			{
+				return RedirectToPage("/Auth/AuthLogin");
+
+            }	
 			var totalManga = db.FollowLists.Count();
 
 			ListFollow = db.FollowLists.Where(x => x.UserId == user.Id).ToList();
@@ -61,6 +66,7 @@ namespace MangaOnline.Pages.Public
 								 select c;
 				mangaCategoryDict.Add(manga.Id, cateResult.ToList());
 			}
+			return Page();
 		}
 
 		public IActionResult OnPostUnfollow(string mangaId)
