@@ -1,0 +1,137 @@
+﻿@page
+@model MangaOnline.Pages.Public.FollowedListModel
+@using MangaOnline.ModelCore
+@using MangaOnline.Models
+@using Newtonsoft.Json
+
+
+@{
+    Layout = "_Layout";
+}
+
+@{
+    var listManga = Model.listManga;
+    var mangaCategoryDict = Model.mangaCategoryDict;
+
+    var accessToken = HttpContext.Request.Cookies["USER_DATA"];
+    UserCookie user2 = new UserCookie();
+    var avatarLink = "/lib/img/avatar-default.jpg";
+    if (accessToken is not null)
+    {
+        user2 = JsonConvert.DeserializeObject<UserCookie>(accessToken);
+        if (user2.Avartar is not null)
+        {
+            avatarLink = "/image/avartar-user/" + user2.Avartar;
+        }
+    }
+    else
+    {
+        user2 = null;
+    }
+
+}
+
+<link rel="stylesheet" href="~/css/DetailManga.css">
+
+<!-- page title -->
+<section class="section section--first section--bg" data-bg="img/section/section.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section__wrap">
+                    <!-- section title -->
+                    <h2 class="section__title">Truyện đang theo dõi</h2>
+                    <!-- end section title -->
+                    <!-- breadcrumb -->
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb__item">
+                            <a asp-page="/Index">Trang chủ</a>
+                        </li>
+                        <li class="breadcrumb__item breadcrumb__item--active">Theo Dõi</li>
+                    </ul>
+                    <!-- end breadcrumb -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end page title -->
+@if (user2 is null)
+{
+    <div style="display: flex; justify-content: center; align-items: center">
+        <p class="breadcrumb__item breadcrumb__item--active" style="margin-left: 16px; margin-top: 16px">
+            Bạn nên <a style="color: #ff55a5;" class="login_link" asp-page="/Auth/AuthLogin">Đăng nhập</a>
+            để truy cập truyện đã theo dõi của bạn ở bất cứ đâu
+        </p>
+    </div>
+}
+else
+{
+    if (Model.ListFollow.Count == 0)
+    {
+        <div style="display: flex; justify-content: center; align-items: center">
+            <p class="breadcrumb__item breadcrumb__item--active" style="margin-left: 16px; margin-top: 16px">
+                Bạn chưa theo dõi truyện nào cả. Để theo dõi truyện, nhấn vào <u>Theo dõi</u> như hình bên:
+            </p>
+            <p>
+                <img src="/image/huong-dan-theo-doi-truyen.png" alt="Hướng dẫn theo dõi truyện tranh"
+                     width="660" style="margin-left: 16px; margin-top: 16px" />
+            </p>
+        </div>
+    }
+    else
+    {
+        <!-- catalog -->
+        <div class="catalog" style="padding-top: 20px">
+            <div class="container">
+                <div class="row">
+                    <!-- card -->
+                    @foreach (var manga in listManga)
+                    {
+                        <div class="col-6 col-sm-4 col-lg-3 col-xl-2">
+                            <div class="card">
+                                <div class="card__cover">
+                                    <img src="/image/manga-image/@manga.Image" alt="@manga.Name" style="height: 237.03px; width: 160px;">
+                                    <a asp-page="/Public/DetailManga" asp-route-id="@manga.Id" class="card__play">
+                                        <i class="icon ion-ios-play"></i>
+                                    </a>
+                                </div>
+                                <div class="card__content">
+                                    <h3 class="card__title">
+                                        <a asp-page="/Public/DetailManga" asp-route-id="@manga.Id">@manga.Name</a>
+                                    </h3>
+                                    <span class="card__category">
+                                        @{
+                                            var categories = mangaCategoryDict[manga.Id];
+                                            foreach (var category in categories)
+                                            {
+                                                <a asp-page="/Public/CategoriesList" asp-route-cateName="@category.Name">@category.Name</a>
+                                            }
+                                        }
+                                    </span>
+                                    <span class="card__rate"><i class="icon ion-ios-star"></i>@manga.Star</span>
+                                    <form method="post" asp-page-handler="unfollow">
+                                        <input name="mangaId" value="@manga.Id" hidden />
+                                        <button type="submit" class="button-unfollow">
+                                            <i class="fa fa-times"></i>
+                                            <span>Bỏ theo dõi</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <!-- end card -->                  
+                </div>
+            </div>
+        </div>
+        <!-- end catalog -->
+    }
+}
+<script>
+$(document).ready(function () {
+    $('#noti-follow2').hide();
+    $.cookie('NotiFollowStatus', '');
+})
+</script>
+

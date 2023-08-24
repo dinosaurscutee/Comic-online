@@ -45,7 +45,7 @@ public class UserList : PageModel
         var statusEnum = Status switch
         {
             "Bình thường" => (int)StatusUser.Normal,
-            "Lock" => (int)StatusUser.Lock,
+            "Khóa" => (int)StatusUser.Lock,
             _ => -1
         };
 

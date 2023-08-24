@@ -1,0 +1,136 @@
+﻿@page "/profile"
+@using MangaOnline.ModelCore
+@model MangaOnline.Pages.Public.UserProfileModel
+@using Newtonsoft.Json
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/Notification.css">
+<link rel="stylesheet" href="~/css/AddManga.css">
+@{
+    var accessToken = HttpContext.Request.Cookies["USER_DATA"];
+    UserCookie? userProfile = new UserCookie();
+    var avatarLink = "/lib/img/avatar-default.jpg";
+    if (accessToken is not null)
+    {
+        userProfile = JsonConvert.DeserializeObject<UserCookie>(accessToken);
+    }
+    else
+    {
+        userProfile = null;
+    }
+    if (Model.NotificationUpdateUser is not null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show alert-noti" id="alertNotification" role="alert">
+            <i class="icon ion-ios-checkmark-circle icon-noti"></i>
+            <span class="content-noti">@Model.NotificationUpdateUser</span>
+            <button type="button" class="close icon-btn" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+}
+<div class="sign section--bg">
+    <div class="container-add">
+        <div class="row">
+            <div class="col-12">
+                <div class="sign__content" style="padding-top: 100px;">
+                    <!-- add form -->
+                    <form method="post" enctype="multipart/form-data" class="sign__form form-addManga">
+                        <input asp-for="RequestUser.UserId" value="@userProfile!.Id" hidden />
+                        <div class="title-addManga">
+                            <h1>Thông tin cá nhân</h1>
+                        </div>
+                        <div class="col-12" style="display: flex;max-height: 371px">
+                            <div class="col-sm-5">
+                                <div class="input-group-add">
+                                    <p class="input-title">Họ và tên</p>
+                                    <input asp-for="RequestUser.FullName" value="@userProfile!.FullName" type="text" required maxlength="20"
+                                           class="sign__input" placeholder="dưới 20 ký tự">
+                                    <p class="noti" id="name-message"></p>
+                                </div>
+                                <div class="input-group-add">
+                                    <p class="input-title">SĐT</p>
+                                    <input asp-for="RequestUser.Phone" value="@userProfile!.PhoneNumber" type="text" required maxlength="10" class="sign__input" placeholder="10 số">
+                                    <p class="noti"></p>
+                                </div>
+                                <div class="input-group-add" style="color: #fff">
+                                    <p class="input-title">Email</p>
+                                    <p>
+                                        @userProfile.Email
+                                    </p>
+                                    <p class="noti"></p>
+                                </div>
+                                <div class="input-group-add" style="color: #fff">
+                                    <p class="input-title">Vai trò</p>
+                                    <p>
+                                        @{
+                                            var role = userProfile.Role switch
+                                            {
+                                                "Admin" => "Admin",
+                                                "NormalUser" => "Tài khoản bình thường",
+                                                "VipUser" => "Tài khoản Vip",
+                                                _ => ""
+                                            };
+                                        }
+                                        @role
+                                        @if (userProfile.Role == "VipUser")
+                                        {
+                                        <p>hết hạn: @Model.UserProfile1!.UserToken!.Expires.ToString("dd/MM/yyyy")</p>
+                                        }
+                                    </p>
+                                    <p class="noti"></p>
+                                </div>
+                            </div>
+                            <div class="col-sm-5 update-image-file">
+                                @{
+                                    if (userProfile.Avartar is not null)
+                                    {
+                                        <img class="" src="~/image/avartar-user/@userProfile.Avartar"
+                                     id="preview" style="border-radius: 50%; width: 250px;height: 250px">
+                                    }
+                                    else
+                                    {
+                                        <img class="" src="~/lib/img/avatar-default.jpg" id="preview"
+                                     style="border-radius: 50%;width: 250px;height: 250px">
+                                    }
+                                }
+                                <input type="file"
+                                       asp-for="RequestUser.Avarta"
+                                       id="fileInput"
+                                       class="input-file-image"
+                                       accept=".png, .jpg, .jpeg" />
+                            </div>
+                        </div>
+                        <div class="col-sm-6" style="max-height: 120px;">
+                            <button class="sign__btn" id="submitBtn" type="submit">Thay đổi</button>
+                        </div>
+
+                    </form>
+                    <!-- add form -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const fileInput = document.getElementById('fileInput');
+    const preview = document.getElementById('preview');
+
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+        const reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    });
+</script>

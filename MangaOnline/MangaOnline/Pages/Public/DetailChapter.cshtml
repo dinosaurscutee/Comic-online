@@ -1,0 +1,29 @@
+﻿@page
+@model MangaOnline.Pages.Public.DetailChapter
+
+@{
+    Layout = null;
+}
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Đọc truyện";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<div style="margin-top: 93px;">
+    <style>
+        #manga-pdf{
+            width: 100%;
+            height: 95vh;
+        }
+    </style>
+    <iframe id="manga-pdf" src="~/pdf/@Model.Chaptere" frameborder="0"></iframe>
+</div>
+</body>
+</html>

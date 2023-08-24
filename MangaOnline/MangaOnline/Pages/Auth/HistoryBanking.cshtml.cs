@@ -21,7 +21,7 @@ public class HistoryBanking : AbstractModel
         _context = context;
     }
 
-    public IActionResult OnGet(string? vnp_TxnRef, int? vnp_Amount, bool statusSub)
+    public IActionResult OnGetAsync(string? vnp_TxnRef, int? vnp_Amount, bool statusSub)
     {
         if (!CheckRoleUser(new[] { UserRoleEnum.NormalUser.ToString(), UserRoleEnum.VipUser.ToString() }))
             return RedirectToPage("/Error");
@@ -54,7 +54,7 @@ public class HistoryBanking : AbstractModel
                     break;
             }
             statusPackage.To = userRole.User.UserToken!.Expires.ToString("dd/MM/yyyy"); // bđ gói
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             var token = AuthenticationPage.WriteToken(user.FullName, user.Email, userRole.Role.Name!);
             var userCookie = new UserCookie()
             {
