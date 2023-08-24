@@ -100,7 +100,7 @@ namespace MangaOnline.Pages.Manage
                 }
                 _context.Mangas.Add(manga);
                 await _context.SaveChangesAsync();
-                return RedirectToPage("/listmanga", new { notilistmanga = "AddSuccess" });
+                return RedirectToPage("/Manage/listmanga", new { notilistmanga = "AddSuccess" });
             }
             else
             {
@@ -133,7 +133,7 @@ namespace MangaOnline.Pages.Manage
                             mangaOld.Image :
                             _logicHandler.UpdateImage(RequestAddManga.Image!, mangaOld.Image!);
                     await _context.SaveChangesAsync();
-                    return RedirectToPage("/listmanga", new { notilistmanga = "UpdateSuccess" });
+                    return RedirectToPage("/Manage/listmanga", new { notilistmanga = "UpdateSuccess" });
                 }
             }
             return Page();

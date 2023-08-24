@@ -1,5 +1,6 @@
 ﻿@page
-@model MangaOnline.Pages.Manage.listmangaModel
+@model MangaOnline.Pages.Manage.ListMangaModel
+
 @{
     Layout = "_Layout";
 }
@@ -187,7 +188,7 @@
                                                 }
                                             </form>
                                             <form method="get"></form>
-                                            <a href="/manage/addnewmanga?mangaId=@manga.Id">
+                                            <a href="/manage/addmanga?mangaId=@manga.Id">
                                                 <button class="btn-status-blue" type="submit" style="margin-left: 5px;">
                                                     <i class="icon ion-ios-create"></i>
                                                 </button>
