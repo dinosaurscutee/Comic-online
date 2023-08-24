@@ -9,9 +9,10 @@ namespace MangaOnline.Pages.Public
     {
         private readonly MangaOnlineV1DevPRN221Context _context;
         private readonly ILogicHandler _logicHandler;
-        public AddChapterModel(MangaOnlineV1DevPRN221Context mangaOnlineV1DevContext)
+        public AddChapterModel(MangaOnlineV1DevPRN221Context mangaOnlineV1DevContext, ILogicHandler logicHandler)
         {
             _context = mangaOnlineV1DevContext;
+            _logicHandler = logicHandler;
         }
 
         public Guid? MangaId { get; set; }
@@ -35,6 +36,7 @@ namespace MangaOnline.Pages.Public
             //	return RedirectToPage("/Error");
             //}
             IFormFile file = Request.Form.Files.GetFile("fileUp");
+            //IFormFile file = Request.Form.Files.GetFile("wpName");
 
             Chaptere chaptere = new Chaptere();
             chaptere.ChapterNumber = int.Parse(Request.Form["ChapNumber"]);
@@ -45,12 +47,13 @@ namespace MangaOnline.Pages.Public
             chaptere.CreatedAt = DateTimeOffset.Now;
             chaptere.Status = 1;
             chaptere.IsActive = true;
-            //chaptere.FilePDF = _logicHandler.CreatePDF(file);
+            chaptere.FilePdf = _logicHandler.CreatePDF(file);
 
             _context.Chapteres.AddAsync(chaptere);
             _context.SaveChanges();
             manga = _context.Mangas.FirstOrDefault(x => x.Id == chaptere.MangaId);
             ViewData["done"] = 1;
+
             return Page();
         }
     }
