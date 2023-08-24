@@ -1,5 +1,7 @@
-﻿using MangaOnline.Extensions;
+﻿using MangaOnline.Enum;
+using MangaOnline.Extensions;
 using MangaOnline.Models;
+using MangaOnline.Pages.Auth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MangaOnline.Pages.Manage
 {
-    public class addnewmangaModel : PageModel
+    public class addnewmangaModel : AbstractModel
     {
         private readonly MangaOnlineV1DevPRN221Context _context;
         private readonly ILogicHandler _logicHandler;
@@ -36,6 +38,9 @@ namespace MangaOnline.Pages.Manage
         }
         public IActionResult OnGet(Guid? mangaId)
         {
+            if (!CheckRoleUser(new[] { UserRoleEnum.Admin.ToString() }))
+                return RedirectToPage("/Error");
+
             authors = _context.Authors.ToList();
             categories = _context.Categories.ToList();
             var mangaOld = _context.Mangas
@@ -53,6 +58,9 @@ namespace MangaOnline.Pages.Manage
         }
         public async Task<IActionResult> OnPost()
         {
+            if (!CheckRoleUser(new[] { UserRoleEnum.Admin.ToString() }))
+                return RedirectToPage("/Error");
+
             categories = _context.Categories.ToList();
             if (RequestAddManga.MangaId is null)
             {
