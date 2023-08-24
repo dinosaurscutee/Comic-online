@@ -59,7 +59,8 @@ namespace MangaOnline.Pages.Public
             manga = _context.Mangas.FirstOrDefault(x => x.Id == chaptere.MangaId);
             ViewData["done"] = 1;
             await HubContext.Clients.All.SendAsync("LoadNotification", manga.Id);
-            return Page();
+
+            return RedirectToPage("/Public/DetailManga", new { id = chaptere.MangaId });
         }
     }
 }

@@ -88,7 +88,7 @@ namespace MangaOnline.Pages.Manage
                     Description = description,
                     CreatedAt = utcTime2,
                     ModifiedAt = DateTimeOffset.Now,
-                    IsActive = RequestAddManga.IsActive,
+                    IsActive = true,
                     Image = _logicHandler.CreateImage(RequestAddManga.Image)
                 };
                 if (RequestAddManga.Status.Equals("Hoàn thành"))
@@ -127,7 +127,6 @@ namespace MangaOnline.Pages.Manage
                     mangaOld.Name = RequestAddManga.Name;
                     mangaOld.Author.Name = RequestAddManga.AuthorName;
                     mangaOld.Description = description;
-                    mangaOld.IsActive = RequestAddManga.IsActive;
                     foreach (var categoryId in CategoriesId)
                     {
                         _context.CategoryMangas
@@ -137,6 +136,16 @@ namespace MangaOnline.Pages.Manage
                     utcTime1 = DateTime.SpecifyKind(utcTime1, DateTimeKind.Utc);
                     DateTimeOffset utcTime2 = utcTime1;
                     mangaOld.CreatedAt = utcTime2;
+                    
+                    if (RequestAddManga.Status.Equals("Hoàn thành")){
+                        mangaOld.Status = 0;
+                    }
+                    else if (RequestAddManga.Status.Equals("Đang cập nhật")){
+                        mangaOld.Status = 1;
+                    }
+                    else if (RequestAddManga.Status.Equals("Dừng cập nhật")){
+                        mangaOld.Status = 2;
+                    }
                     mangaOld.ModifiedAt = DateTimeOffset.Now;
                     mangaOld.Image =
                         RequestAddManga.Image is null ?
