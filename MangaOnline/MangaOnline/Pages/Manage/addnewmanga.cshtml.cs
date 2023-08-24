@@ -30,10 +30,9 @@ namespace MangaOnline.Pages.Manage
         public Guid? MangaId { get; set; }
 
         public Manga? MangaUpdate { get; set; } = default;
-        public addnewmangaModel(MangaOnlineV1DevPRN221Context context, ILogicHandler iLogicHandler)
+        public addnewmangaModel(MangaOnlineV1DevPRN221Context context)
         { 
             _context = context;
-            _logicHandler = iLogicHandler;
         }
         public IActionResult OnGet(Guid? mangaId)
         {
@@ -79,7 +78,7 @@ namespace MangaOnline.Pages.Manage
                     Description = description,
                     CreatedAt = utcTime2,
                     ModifiedAt = DateTimeOffset.Now,
-                    IsActive = false,
+                    IsActive = RequestAddManga.IsActive,
                     Image = _logicHandler.CreateImage(RequestAddManga.Image)
                 };
                 if (RequestAddManga.Status.Equals("Hoàn thành"))
@@ -116,9 +115,9 @@ namespace MangaOnline.Pages.Manage
                 if (mangaOld is not null)
                 {
                     mangaOld.Name = RequestAddManga.Name;
-                    //mangaOld.Author.Name = RequestAddManga.AuthorName;
                     mangaOld.Author.Name = RequestAddManga.AuthorName;
                     mangaOld.Description = description;
+                    mangaOld.IsActive = RequestAddManga.IsActive;
                     foreach (var categoryId in CategoriesId)
                     {
                         _context.CategoryMangas
