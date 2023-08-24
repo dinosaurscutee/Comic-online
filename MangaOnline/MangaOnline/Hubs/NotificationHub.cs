@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 
-namespace MangaOnline.Pages.Hubs;
+namespace MangaOnline.Hubs;
 
 public class NotificationHub : Hub
 {
