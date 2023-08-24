@@ -1,6 +1,6 @@
 ﻿using MangaOnline.Enum;
 using MangaOnline.Extensions;
-using MangaOnline.Pages.Hubs;
+using MangaOnline.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 
