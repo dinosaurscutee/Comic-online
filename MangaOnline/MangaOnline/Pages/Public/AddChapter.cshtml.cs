@@ -9,12 +9,9 @@ namespace MangaOnline.Pages.Public
     {
         private readonly MangaOnlineV1DevPRN221Context _context;
         private readonly ILogicHandler _logicHandler;
-        public AddChapterModel(IJwtTokenHandler jwtTokenHandler,
-            MangaOnlineV1DevPRN221Context mangaOnlineV1DevContext,
-            ILogicHandler iLogicHandler)
+        public AddChapterModel(MangaOnlineV1DevPRN221Context mangaOnlineV1DevContext)
         {
             _context = mangaOnlineV1DevContext;
-            _logicHandler = iLogicHandler;
         }
 
         public Guid? MangaId { get; set; }
