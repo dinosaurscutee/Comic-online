@@ -1,7 +1,7 @@
 using System.Text;
 using MangaOnline.Extensions;
+using MangaOnline.Hubs;
 using MangaOnline.Models;
-using MangaOnline.Pages.Hubs;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);

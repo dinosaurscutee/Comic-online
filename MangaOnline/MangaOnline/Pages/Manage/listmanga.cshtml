@@ -1,0 +1,254 @@
+﻿@page
+@model MangaOnline.Pages.Manage.ListMangaModel
+
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/Notification.css">
+<link rel="stylesheet" href="~/css/MangaListManager.css">
+@{
+    if (Model.NotificationListManga is not null)
+    {
+        <div class="alert alert-warning alert-dismissible fade show alert-noti" id="alertNotification" role="alert">
+            <i class="icon ion-ios-checkmark-circle icon-noti"></i>
+            <span class="content-noti">@Model.NotificationListManga</span>
+            <button type="button" class="close icon-btn" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    routeUrl = routeUrl + "?genre=" + Model.Genre + "&status=" + Model.Status + "&statusOff=" + Model.StatusOff + "&sort=" + Model.Sort + "&index=";
+}
+<div class="container border-list">
+    <div class="row">
+        <div class="col-lg-12">
+            <form method="get">
+                @* filter *@
+                <div class="border-filter">
+                    <!-- filter item -->
+                    <div class="filter__item" id="filter__genre">
+                        <span class="filter__item-label">Thể loại:</span>
+
+                        <div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-genre"
+                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="@Model.Genre">
+                            <input asp-for="@Model.Genre" type="text" hidden />
+                            <span></span>
+                        </div>
+
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-genre">
+                            <li>Tất cả</li>
+                            @foreach (var cate in Model.CategoryList)
+                            {
+                                <li>@cate.Name</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div class="filter__item" id="filter__status">
+                        <span class="filter__item-label">Trạng thái:</span>
+
+                        <div class="filter__item-btn dropdown-toggle" role="navigation" id="filter-status" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="@Model.Status">
+                            <input asp-for="@Model.Status" type="hidden">
+                            <span></span>
+                        </div>
+
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="filter-status">
+                            <li>Tất cả</li>
+                            <li>Hoàn thành</li>
+                            <li>Đang cập nhật</li>
+                            <li>Dừng cập nhật</li>
+                        </ul>
+                    </div>
+                    <div class="filter__item" id="off__status">
+                        <span class="filter__item-label">Ẩn/Hiện:</span>
+                        <div class="filter__item-btn dropdown-toggle" role="navigation" id="off-status" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="@Model.StatusOff">
+                            <input asp-for="@Model.StatusOff" type="hidden">
+                            <span></span>
+                        </div>
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="off-status">
+                            <li>Tất cả</li>
+                            <li>Đang ẩn</li>
+                            <li>Đang hiện</li>
+                        </ul>
+                    </div>
+                    <div class="filter__item" id="filter__sort">
+                        <span class="filter__item-label">Sắp xếp:</span>
+                        <div class="filter__item-btn dropdown-toggle" role="navigation" id="Sort" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input type="button" value="@Model.Sort">
+                            <input asp-for="@Model.Sort" type="hidden">
+                            <span></span>
+                        </div>
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown" aria-labelledby="Sort">
+                            <li>Tất cả</li>
+                            <li>Lượt xem cao</li>
+                            <li>Lượt đánh giá cao</li>
+                            <li>Lượt theo dõi cao</li>
+                        </ul>
+                    </div>
+                    <div class="label-apply">
+                        <div class="filter__item" style="margin-right: 20px;">
+                            <a href="/manage/addnewmanga">
+                                <div class="btn-status-plink">
+                                    Thêm mới
+                                </div>
+                            </a>
+                        </div>
+                        <div class="filter__item" style="margin-right: 20px;">
+                            <a href="/manage/listmanga">
+                                <div class="btn-status-plink">
+                                    <i class="icon ion-ios-refresh-circle"></i>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="filter__item">
+                            <button class="btn-status-plink" type="submit">
+                                Áp dụng
+                            </button>
+                        </div>                       
+                    </div>
+                    <!-- end filter item -->
+                </div>
+                @* filter *@
+            </form>
+            <div class="main-box clearfix">
+                <div class="table-responsive">
+                    <table border="1px" class="table table-hover table-dark user-list">
+                        <thead>
+                            <tr>
+                                <th scope="col">Ảnh bìa</th>
+                                <th scope="col">Tên manga</th>
+                                <th scope="col">Tác giả</th>
+                                <th scope="col">Thể loại</th>
+                                <th scope="col">Thông số</th>
+                                <th scope="col">Năm</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Ẩn/Hiện</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var manga in Model.ListManga)
+                            {
+                                <tr>
+                                    <th style="text-align: center;padding: 10px 0px;">
+                                        <img class="avatar1" src="/image/manga-image/@manga.Image" alt="">
+                                    </th>
+                                    <th class="name-manga">@manga.Name</th>
+                                    <th>@manga.Author.Name</th>
+                                    <th>
+                                        <span class="card__category">
+                                            @foreach (var categoryManga in manga.CategoryMangas)
+                                            {
+                                                <a asp-page="/Public/CategoriesList" asp-route-cateName="@categoryManga.Category.Name">@categoryManga.Category.Name</a>
+                                            }
+                                        </span>
+                                    </th>
+                                    <th>
+                                        <p>
+                                            <span class="card__rate" style="color: #a1a1a1">
+                                                <i class="icon ion-ios-star"></i>@manga.Star
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="card__rate" style="color: #a1a1a1">
+                                                <i class="icon ion-ios-eye"></i>@await Component.InvokeAsync("FormatNumber", manga.ViewCount)
+                                            </span>
+                                        </p>
+                                        <p>
+                                            <span class="card__rate" style="color: #a1a1a1">
+                                                <i class="icon ion-ios-people"></i>@await Component.InvokeAsync("FormatNumber", manga.FollowCount)
+                                            </span>
+                                        </p>
+                                    </th>
+                                    <th>@manga.CreatedAt!.Value.Year</th>
+                                    <th>
+                                        @{
+                                            var statusString = manga.Status switch
+                                            {
+                                                0 => "Hoàn thành",
+                                                1 => "Đang cập nhật",
+                                                2 => "Dừng cập nhật",
+                                                _ => ""
+                                            };
+                                        }
+                                        @statusString
+                                    </th>
+                                    <th>
+                                        <div style="display: flex;    justify-content: center;">
+                                            <form method="post" asp-page-handler="changeIsActive">
+                                                <input name="mangaId" value="@manga.Id" hidden />
+                                                @if (manga.IsActive)
+                                                {
+                                                    <button class="btn-status-green" type="submit">
+                                                        <i class="icon ion-ios-eye"></i>
+                                                    </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn-status-red" type="submit">
+                                                        <i class="icon ion-ios-eye-off"></i>
+                                                    </button>
+                                                }
+                                            </form>
+                                            <form method="get"></form>
+                                            <a href="/manage/addnewmanga?mangaId=@manga.Id">
+                                                <button class="btn-status-blue" type="submit" style="margin-left: 5px;">
+                                                    <i class="icon ion-ios-create"></i>
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </th>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- paginator -->
+                <div class="col-12">
+                    <ul class="paginator">
+                        @{
+                            var back = Model.PageIndex > 1 ? "" : "disabled";
+                            var next = Model.PageIndex != Model.LastPage ? "" : "disabled";
+                        }
+                        <li class="paginator__item paginator__item--prev @back">
+
+                            <a href="@routeUrl@(Model.PageIndex-1)" class="">
+                                <i class="icon ion-ios-arrow-back"></i>
+                            </a>
+                        </li>
+                        @{
+                            if (Model.PageIndex > 1)
+                            {
+                                <li class="paginator__item ">
+                                    <a href="@routeUrl@(Model.PageIndex-1)">@(Model.PageIndex - 1)</a>
+                                </li>
+                            }
+                            <li class="paginator__item paginator__item--active">
+                                <a>@Model.PageIndex</a>
+                            </li>
+                            if (Model.PageIndex != Model.LastPage)
+                            {
+                                <li class="paginator__item">
+                                    <a href="@routeUrl@(Model.PageIndex+1)">@(Model.PageIndex + 1)</a>
+                                </li>
+                            }
+                        }
+                        <li class="paginator__item paginator__item--next @next">
+                            <a href="@routeUrl@(Model.PageIndex+1)">
+                                <i class="icon ion-ios-arrow-forward"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- end paginator -->
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/js/Notification.js"></script>

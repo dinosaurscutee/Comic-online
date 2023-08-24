@@ -106,6 +106,25 @@ namespace MangaOnline.Pages.Public
 
             manga.FollowCount++;
             db.SaveChanges();
+            
+            // add list mangaFollowId on cookie
+            var listMangaIdFollow = db.FollowLists
+                .Where(x => x.UserId == user.Id)
+                .Select(x=>x.MangaId).ToList();
+            if (listMangaIdFollow.Count>0)
+            {
+                var followStr = "";
+                foreach (var fId in listMangaIdFollow)
+                {
+                    followStr += fId;
+                    if (!fId.Equals(listMangaIdFollow[^1]))
+                    {
+                        followStr += ",";
+                    }
+                }
+                Response.Cookies.Append("MANGA_FOLLOW", followStr);
+            }
+            // add list mangaFollowId on cookie
 
             return RedirectToPage("/Public/DetailManga", new { id = mangaId });
         }
@@ -121,7 +140,24 @@ namespace MangaOnline.Pages.Public
 
             manga.FollowCount--;
             db.SaveChanges();
-
+            // add list mangaFollowId on cookie
+            var listMangaIdFollow = db.FollowLists
+                .Where(x => x.UserId == user.Id)
+                .Select(x=>x.MangaId).ToList();
+            if (listMangaIdFollow.Count>0)
+            {
+                var followStr = "";
+                foreach (var fId in listMangaIdFollow)
+                {
+                    followStr += fId;
+                    if (!fId.Equals(listMangaIdFollow[^1]))
+                    {
+                        followStr += ",";
+                    }
+                }
+                Response.Cookies.Append("MANGA_FOLLOW", followStr);
+            }
+            // add list mangaFollowId on cookie
             return RedirectToPage("/Public/DetailManga", new { id = mangaId });
         }
 
@@ -193,7 +229,7 @@ namespace MangaOnline.Pages.Public
         public IActionResult OnPostFirstChapter(string mangaId)
         {
             var chapterFirst = db.Chapteres.Where(x => x.MangaId.ToString() == mangaId)
-                .OrderBy(x => x.ChapterNumber)
+                .OrderByDescending(x => x.ChapterNumber)
                 .FirstOrDefault();
             if (chapterFirst != null)
             {

@@ -1,0 +1,161 @@
+﻿@page
+@model MangaOnline.Pages.Manage.addnewmangaModel
+@{
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <section class="content" style="background-color : #212529">
+        <div class="container" style="padding-top: 100px;">
+            <div class="row">
+                <div class="col-4" style="margin: auto">
+                    <h2 class="content__title">Cấu hình manga</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <form method="post" enctype="multipart/form-data">
+                <input asp-for="RequestAddManga.MangaId" value="@Model.MangaId" hidden />
+                <div style="padding-top:20px">
+                    <label style="font-size:22px; color:white;" for="title">Tên Manga:</label>
+                    <input asp-for="RequestAddManga.Name" value="@Model.MangaUpdate?.Name" type="text" required maxlength="50" class="sign__input" placeholder="dưới 50 ký tự">
+                </div>
+
+                <div style="padding-top:20px">
+                    <label style="font-size:22px; color:white;" for="title">Tên tác giả</label>
+                    <input asp-for="RequestAddManga.AuthorName" value="@Model.MangaUpdate?.Author.Name" type="text" required maxlength="20" class="sign__input" placeholder="dưới 20 ký tự" style="margin-left: 10px">
+                    <p class="noti"></p>
+                </div>
+
+                <div>
+                    <div class="filter__item" id="filter__quality">
+                        <div class="filter__item-btn dropdown-toggle btn-dropdown-checkbox" style="margin-top: 25px;" role="navigation" id="filter-quality" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <input id="status-manga" type="button" value="@GetStatusMaga(Model.MangaUpdate?.Status)">
+                            <input id="status-manga-value" asp-for="RequestAddManga.Status" value="" hidden />
+                            <span></span>
+                        </div>
+                        <ul class="filter__item-menu dropdown-menu scrollbar-dropdown"
+                            aria-labelledby="filter-quality">
+                            <li style="color:black;">Hoàn thành</li>
+                            <li style="color:black;">Đang cập nhật</li>
+                            <li style="color:black;">Dừng cập nhật</li>
+                        </ul>
+                    </div>
+                    <p class="noti" id="noti-status"></p>
+                </div>
+
+                <div>
+                    <div class="filter__item" id="filter__rate" style="padding-top: 25px; z-index: 10">
+                        <div class="filter__item-btn dropdown-toggle btn-dropdown-checkbox" role="button" id="filter-rate" data-toggle="dropdown">
+                            <div class="filter__range name-checkbox">
+                                <div id="filter__imbd-start" style="display: none"></div>
+                                <div id="filter__imbd-end" style="display: none"></div>
+                                Thể loại
+                            </div>
+                            <span></span>
+                        </div>
+                        <div id="dropdown-category" class=" hide-dropdown dropdown-checkbox">
+                            <span class="filter__item-label" style="display: none; "></span>
+                            @{
+                                foreach (var category in Model.categories)
+                                {
+                                    <div class="sign__group sign__group--checkbox checkbox-dropdown">
+                                        <input id="@category.Id" name="CategoriesId" value="@category.Id" type="checkbox" checked="@CheckCategoryId(category.Id)">
+                                        <label for="@category.Id">@category.Name</label>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <!-- end filter item -->
+                    <p class="noti" id="noti-category"></p>
+                </div>
+
+                <div>
+                    <div class="input-group-add">
+                        <p style=" line-height: 15px; color: rgba(255, 255, 255, 0.5);  margin-bottom: 5px;">Năm xuất bản</p>
+                        <input asp-for="RequestAddManga.CreatedAt" value="@Model.MangaUpdate?.CreatedAt!.Value.Year" id="input-createdAt" type="text" required maxlength="4" class="sign__input">
+                        <p style="color: #dc3545; margin: 0px; font-size: 12px; padding-left: 5px;" id="CreatedAt"></p>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="font-size:22px; color:white;" for="description">Description:</label>
+                    <textarea id="description" name="description" asp-for="description" class="form-control"></textarea>
+                </div>
+
+                <div class="col-sm-4 update-image-file" style="display: flex;max-height: 800px;flex-direction: column;padding-top:20px;">
+                    @{
+                        if (Model.MangaUpdate is not null)
+                        {
+                            <img class="image-manga" src="~/image/manga-image/@Model.MangaUpdate.Image" id="preview">
+                        }
+                        else
+                        {
+                            <img class="image-manga" src="~/lib/img/default-placeholder.png" id="preview">
+                        }
+                    }
+
+                    @{
+                        if (Model.MangaId is null)
+                        {
+                            <input type="file"
+                                   asp-for="RequestAddManga.Image"
+                                   required
+                                   id="fileInput"
+                                   class="input-file-image"
+                                   accept=".png, .jpg, .jpeg" />
+                        }
+                        else
+                        {
+                            <input type="file"
+                                   asp-for="RequestAddManga.Image"
+                                   id="fileInput"
+                                   class="input-file-image"
+                                   accept=".png, .jpg, .jpeg" />
+                        }
+                    }
+                </div>
+
+                <div class="col-sm-6" style="max-height: 120px;">
+                    <button class="sign__btn" id="submitBtn" type="submit">Tạo Manga</button>
+                </div>
+            </form>            
+        </div>        
+    </section>
+
+}
+<script src="~/js/AddManga.js"></script>
+@{
+    bool CheckCategoryId(Guid categoryId)
+    {
+        if (Model.MangaUpdate is not null)
+        {
+            foreach (var categoryMangas in Model.MangaUpdate.CategoryMangas)
+            {
+                if (categoryMangas.CategoryId == categoryId)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    string GetStatusMaga(int? status)
+    {
+        if (status is not null)
+        {
+            switch (status)
+            {
+                case 0:
+                    return "Hoàn thành";
+                case 1:
+                    return "Đang cập nhật";
+                case 2:
+                    return "Dừng cập nhật";
+            }
+        }
+        return "Trạng thái";
+    }
+
+}
