@@ -1,4 +1,4 @@
-using MangaOnline.Enum;
+﻿using MangaOnline.Enum;
 using MangaOnline.Extensions;
 using MangaOnline.Hubs;
 using MangaOnline.Models;
